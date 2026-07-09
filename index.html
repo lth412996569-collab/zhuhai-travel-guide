@@ -3,903 +3,652 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>三朵金花旅行团 · 珠海国庆亲子悠游计划</title>
+<title>三朵金花旅行团 · 珠海国庆亲子悠游</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-:root {
-  --ocean-deep: #0a1628;
-  --ocean-mid: #1a3a5c;
-  --coral: #e8734a;
-  --coral-light: #f5a080;
-  --sand: #f5e6d3;
-  --gold: #d4a853;
-  --gold-light: #f0d78c;
-  --white: #fefefe;
-  --text: #2c3e50;
-  --text-light: #5a6c7d;
-  --shadow: 0 4px 24px rgba(0,0,0,.12);
-  --shadow-lg: 0 12px 48px rgba(0,0,0,.18);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --transition: .35s cubic-bezier(.4,0,.2,1);
-}
+:root{--o:#0a1628;--om:#1a3a5c;--c:#e8734a;--cl:#f5a080;--g:#d4a853;--gl:#f0d78c;--w:#fefefe;--t:#2c3e50;--tl:#5a6c7d;--s:0 4px 24px rgba(0,0,0,.12);--sl:0 12px 48px rgba(0,0,0,.18);--r:16px;--rs:10px;--tr:.35s cubic-bezier(.4,0,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--o);color:var(--t);overflow:hidden;height:100vh;width:100vw}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Noto Sans SC', sans-serif;
-  background: var(--ocean-deep);
-  color: var(--text);
-  overflow-x: hidden;
-  height: 100vh;
-  width: 100vw;
-}
+/* LANDING */
+#landing{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#0a1628 0%,#1a3a5c 40%,#2c5f7c 70%,#0a1628 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s,transform .6s}
+#landing.hidden{opacity:0;transform:scale(1.05);pointer-events:none}
+.lbg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(232,115,74,.15) 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(212,168,83,.12) 0%,transparent 50%)}
+.lwv{position:absolute;bottom:0;left:0;right:0;height:30vh;background:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 41px);mask-image:linear-gradient(to top,rgba(0,0,0,.3),transparent)}
+.lct{position:relative;z-index:2;text-align:center}
+.lbd{display:inline-block;padding:6px 20px;border-radius:50px;border:1px solid rgba(212,168,83,.4);color:var(--gl);font-size:14px;letter-spacing:4px;margin-bottom:24px;animation:a1 .8s ease both}
+.ltt{font-family:'Noto Serif SC',serif;font-size:clamp(32px,6vw,64px);font-weight:900;background:linear-gradient(135deg,var(--gl) 0%,var(--cl) 50%,var(--g) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;animation:a1 .8s .15s ease both}
+.lst{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);letter-spacing:2px;margin-bottom:40px;animation:a1 .8s .3s ease both}
+.lbt{display:inline-flex;align-items:center;gap:10px;padding:16px 48px;border-radius:50px;border:2px solid var(--c);background:rgba(232,115,74,.1);color:var(--cl);font-size:18px;font-weight:600;cursor:pointer;letter-spacing:2px;transition:all var(--tr);animation:a1 .8s .45s ease both;backdrop-filter:blur(8px)}
+.lbt:hover{background:var(--c);color:white;box-shadow:0 0 40px rgba(232,115,74,.4);transform:translateY(-2px)}
+.flf{position:absolute;inset:0;pointer-events:none}
+.fl{position:absolute;font-size:28px;opacity:0;animation:f1 6s ease-in-out infinite}
+.fl:nth-child(1){top:15%;left:10%}.fl:nth-child(2){top:25%;right:12%;animation-delay:1s;font-size:22px}
+.fl:nth-child(3){top:60%;left:15%;animation-delay:2s;font-size:32px}.fl:nth-child(4){top:20%;right:25%;animation-delay:.5s}
+.fl:nth-child(5){bottom:20%;right:18%;animation-delay:1.5s;font-size:24px}.fl:nth-child(6){bottom:25%;left:20%;animation-delay:3s}
+@keyframes f1{0%,100%{opacity:0;transform:translateY(0) rotate(0deg)}20%{opacity:.7}80%{opacity:.7}100%{opacity:0;transform:translateY(-60px) rotate(15deg)}}
+@keyframes a1{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
-/* ===== LANDING PAGE ===== */
-#landing {
-  position: fixed; inset: 0; z-index: 1000;
-  background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 40%, #2c5f7c 70%, #0a1628 100%);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: opacity .6s, transform .6s;
-}
-#landing.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
+/* APP */
+#app{height:100vh;width:100vw;position:relative}
+.mt{position:fixed;top:16px;right:16px;z-index:200;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--tr)}
+.mt:hover{background:rgba(255,255,255,.15)}
+.mt.on{border-color:var(--c);box-shadow:0 0 16px rgba(232,115,74,.3)}
 
-.landing-bg {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 30% 50%, rgba(232,115,74,.15) 0%, transparent 60%),
-              radial-gradient(ellipse at 70% 30%, rgba(212,168,83,.12) 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 80%, rgba(245,160,128,.1) 0%, transparent 50%);
-}
-.landing-waves {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 30vh;
-  background: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,.02) 40px, rgba(255,255,255,.02) 41px);
-  mask-image: linear-gradient(to top, rgba(0,0,0,.3), transparent);
-}
+/* HUB */
+#hub{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10}
+.hbb{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(26,58,92,.3) 0%,var(--o) 70%)}
+.hbc{position:relative;width:min(80vw,500px);height:min(80vw,500px);display:flex;align-items:center;justify-content:center}
+.hbr{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.08);animation:r1 4s ease-in-out infinite}
+.hbr:nth-child(1){width:100%;height:100%}.hbr:nth-child(2){width:70%;height:70%;animation-delay:.5s}.hbr:nth-child(3){width:40%;height:40%;animation-delay:1s}
+@keyframes r1{0%,100%{border-color:rgba(255,255,255,.06)}50%{border-color:rgba(232,115,74,.15)}}
+.hcc{position:relative;z-index:2;text-align:center;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(26,58,92,.9),rgba(10,22,40,.95));border:2px solid rgba(212,168,83,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 48px rgba(212,168,83,.15)}
+.hcc .i{font-size:36px}.hcc .l{font-family:'Noto Serif SC',serif;font-size:13px;color:var(--gl);margin-top:2px}
+.nb{position:absolute;z-index:3;width:100px;height:100px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:rgba(10,22,40,.85);backdrop-filter:blur(8px);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all var(--tr);color:rgba(255,255,255,.7);font-size:28px}
+.nb .nl{font-size:12px;font-weight:500;letter-spacing:1px}
+.nb:hover{border-color:var(--c);color:var(--cl);box-shadow:0 0 32px rgba(232,115,74,.25);transform:scale(1.08)}
+.nb.tr{top:-60px;left:50%;transform:translateX(-50%)}.nb.ac{right:-60px;top:50%;transform:translateY(-50%)}
+.nb.fd{bottom:-60px;left:50%;transform:translateX(-50%)}.nb.pl{left:-60px;top:50%;transform:translateY(-50%)}
 
-.landing-content { position: relative; z-index: 2; text-align: center; }
-.landing-badge {
-  display: inline-block; padding: 6px 20px; border-radius: 50px;
-  border: 1px solid rgba(212,168,83,.4);
-  color: var(--gold-light); font-size: 14px; letter-spacing: 4px;
-  margin-bottom: 24px;
-  animation: fadeInUp .8s ease both;
-}
-.landing-title {
-  font-family: 'Noto Serif SC', serif;
-  font-size: clamp(32px, 6vw, 64px); font-weight: 900;
-  background: linear-gradient(135deg, var(--gold-light) 0%, var(--coral-light) 50%, var(--gold) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 12px;
-  animation: fadeInUp .8s .15s ease both;
-}
-.landing-subtitle {
-  font-size: clamp(14px, 2vw, 20px); color: rgba(255,255,255,.6);
-  letter-spacing: 2px; margin-bottom: 40px;
-  animation: fadeInUp .8s .3s ease both;
-}
-.landing-btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 16px 48px; border-radius: 50px;
-  border: 2px solid var(--coral);
-  background: rgba(232,115,74,.1);
-  color: var(--coral-light); font-size: 18px; font-weight: 600;
-  cursor: pointer; letter-spacing: 2px;
-  transition: all var(--transition);
-  animation: fadeInUp .8s .45s ease both;
-  backdrop-filter: blur(8px);
-}
-.landing-btn:hover {
-  background: var(--coral); color: white;
-  box-shadow: 0 0 40px rgba(232,115,74,.4);
-  transform: translateY(-2px);
-}
+/* PANELS */
+.pov{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .4s}
+.pov.on{opacity:1;pointer-events:all}
+.dp{position:fixed;z-index:60;background:linear-gradient(180deg,#0d1f33 0%,#0a1628 100%);border-radius:var(--r);box-shadow:var(--sl);overflow:hidden;display:flex;flex-direction:column;transition:all .5s cubic-bezier(.4,0,.2,1);opacity:0;pointer-events:none;max-height:88vh}
+.dp.on{opacity:1;pointer-events:all}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.ph h2{font-family:'Noto Serif SC',serif;font-size:18px;color:var(--gl);display:flex;align-items:center;gap:8px}
+.px{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:none;color:rgba(255,255,255,.5);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--tr)}
+.px:hover{background:rgba(255,255,255,.1);color:white}
+.pb{flex:1;overflow-y:auto;padding:18px 20px;color:rgba(255,255,255,.85);line-height:1.7}
+.pb::-webkit-scrollbar{width:3px}.pb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+.dpc{top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);width:min(860px,94vw)}
+.dpc.on{transform:translate(-50%,-50%) scale(1)}
+.dpf{top:4vh;left:3vw;right:3vw;bottom:4vh;transform:scale(.95)}
+.dpf.on{transform:scale(1)}
 
-.floating-flowers { position: absolute; inset: 0; pointer-events: none; }
-.flower {
-  position: absolute; font-size: 28px; opacity: 0;
-  animation: floatFlower 6s ease-in-out infinite;
-}
-.flower:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
-.flower:nth-child(2) { top: 25%; right: 12%; animation-delay: 1s; font-size: 22px; }
-.flower:nth-child(3) { top: 60%; left: 15%; animation-delay: 2s; font-size: 32px; }
-.flower:nth-child(4) { top: 20%; right: 25%; animation-delay: .5s; }
-.flower:nth-child(5) { bottom: 20%; right: 18%; animation-delay: 1.5s; font-size: 24px; }
-.flower:nth-child(6) { bottom: 25%; left: 20%; animation-delay: 3s; }
+/* SIDE DETAIL CARD - slides in from right */
+.sidecard{position:fixed;z-index:80;top:0;right:-420px;width:min(420px,92vw);height:100vh;background:linear-gradient(180deg,#0d1f33 0%,#0a1628 100%);box-shadow:-8px 0 48px rgba(0,0,0,.5);transition:right .45s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
+.sidecard.on{right:0}
+.sc-backdrop{position:fixed;inset:0;z-index:75;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s}
+.sc-backdrop.on{opacity:1;pointer-events:all}
+.sch{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.sch h3{font-family:'Noto Serif SC',serif;font-size:17px;color:var(--gl);display:flex;align-items:center;gap:8px}
+.sc-back{display:flex;align-items:center;gap:4px;background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px;padding:4px 8px;border-radius:6px;transition:all var(--tr)}
+.sc-back:hover{color:white;background:rgba(255,255,255,.06)}
+.scb{flex:1;overflow-y:auto;padding:18px 20px;color:rgba(255,255,255,.85);line-height:1.7}
+.scb::-webkit-scrollbar{width:3px}.scb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
 
-@keyframes floatFlower {
-  0%,100% { opacity: 0; transform: translateY(0) rotate(0deg); }
-  20% { opacity: .7; }
-  80% { opacity: .7; }
-  100% { opacity: 0; transform: translateY(-60px) rotate(15deg); }
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* CARD ELEMENTS */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.crd{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--rs);overflow:hidden;transition:all var(--tr);cursor:pointer}
+.crd:hover{border-color:rgba(232,115,74,.4);box-shadow:0 8px 32px rgba(0,0,0,.3);transform:translateY(-2px)}
+.crd:hover .crd-arrow{opacity:1;transform:translateX(0)}
+.crd-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative}
+.crd-img.p1{background:linear-gradient(135deg,#1a3a5c 0%,#2c5f8c 100%)}
+.crd-img.p2{background:linear-gradient(135deg,#1a1a3e 0%,#3a2a6e 100%)}
+.crd-img.p3{background:linear-gradient(135deg,#2d5016 0%,#4a7a2e 100%)}
+.crd-img.p4{background:linear-gradient(135deg,#4a3a1a 0%,#6a5a3a 100%)}
+.crd-img.p5{background:linear-gradient(135deg,#2a1a4e 0%,#5a3a8e 100%)}
+.crd-img.p6{background:linear-gradient(135deg,#3a1a2e 0%,#6a2a4e 100%)}
+.crd-tag{position:absolute;top:8px;right:8px;padding:3px 8px;border-radius:14px;background:var(--c);color:white;font-size:10px}
+.crd-body{padding:12px 14px;position:relative}
+.crd-body h4{font-family:'Noto Serif SC',serif;font-size:15px;color:white;margin-bottom:4px}
+.crd-meta{font-size:11px;color:rgba(255,255,255,.4);display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.crd-price{font-size:17px;font-weight:700;color:var(--cl)}
+.crd-price s{font-size:11px;font-weight:400;color:rgba(255,255,255,.25)}
+.crd-desc{font-size:11px;color:rgba(255,255,255,.35);margin-top:6px;line-height:1.5}
+.crd-arrow{position:absolute;right:12px;bottom:12px;font-size:18px;opacity:.3;transform:translateX(-4px);transition:all var(--tr)}
 
-/* ===== MAIN APP ===== */
-#app { height: 100vh; width: 100vw; position: relative; }
+/* IMAGE PLACEHOLDER */
+.imgph{width:100%;min-height:180px;background:rgba(255,255,255,.03);border-radius:var(--rs);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin:12px 0;border:1px dashed rgba(255,255,255,.08);position:relative;overflow:hidden}
+.imgph .iph-icon{font-size:56px;opacity:.6}
+.imgph .iph-label{font-size:12px;color:rgba(255,255,255,.25)}
+.imgph.combo{flex-direction:row;flex-wrap:wrap;gap:16px;padding:20px;justify-content:center}
+.imgph .iph-item{text-align:center}
+.imgph .iph-item .iph-emoji{font-size:40px;display:block;margin-bottom:4px}
+.imgph .iph-item .iph-text{font-size:10px;color:rgba(255,255,255,.3)}
 
-/* Music Toggle */
-.music-toggle {
-  position: fixed; top: 20px; right: 20px; z-index: 100;
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(255,255,255,.1); backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,.2);
-  color: white; font-size: 20px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all var(--transition);
-}
-.music-toggle:hover { background: rgba(255,255,255,.2); }
-.music-toggle.playing { border-color: var(--coral); box-shadow: 0 0 16px rgba(232,115,74,.3); }
+/* SECTION */
+.st{font-family:'Noto Serif SC',serif;font-size:16px;color:var(--gl);margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)}
+.st:first-child{margin-top:0}
 
-/* ===== NAVIGATION HUB ===== */
-#hub {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 10;
-}
-.hub-bg {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at center, rgba(26,58,92,.3) 0%, var(--ocean-deep) 70%);
-}
-.hub-compass {
-  position: relative; width: min(80vw, 500px); height: min(80vw, 500px);
-  display: flex; align-items: center; justify-content: center;
-}
-.hub-ring {
-  position: absolute; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.08);
-  animation: ringPulse 4s ease-in-out infinite;
-}
-.hub-ring:nth-child(1) { width: 100%; height: 100%; animation-delay: 0s; }
-.hub-ring:nth-child(2) { width: 70%; height: 70%; animation-delay: .5s; }
-.hub-ring:nth-child(3) { width: 40%; height: 40%; animation-delay: 1s; }
-@keyframes ringPulse {
-  0%,100% { border-color: rgba(255,255,255,.06); }
-  50% { border-color: rgba(232,115,74,.15); }
-}
+/* TIMELINE */
+.tl{position:relative;padding-left:28px}
+.tl::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:rgba(255,255,255,.08)}
+.ti{position:relative;padding:8px 0}
+.ti::before{content:'';position:absolute;left:-22px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--c);border:2px solid var(--o)}
+.td{font-size:11px;color:var(--g);font-weight:600;margin-bottom:2px}
+.tc{font-size:13px}
 
-.hub-center {
-  position: relative; z-index: 2; text-align: center;
-  width: 120px; height: 120px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(26,58,92,.9), rgba(10,22,40,.95));
-  border: 2px solid rgba(212,168,83,.5);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  box-shadow: 0 0 48px rgba(212,168,83,.15);
-}
-.hub-center .icon { font-size: 36px; }
-.hub-center .label {
-  font-family: 'Noto Serif SC', serif; font-size: 13px;
-  color: var(--gold-light); margin-top: 2px;
-}
+/* FLIGHT CARDS */
+.frow{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+.fcd{flex:1;min-width:200px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--rs);padding:14px;cursor:pointer;transition:all var(--tr)}
+.fcd:hover{border-color:rgba(232,115,74,.35);background:rgba(255,255,255,.07)}
+.fcc{font-family:'Noto Serif SC',serif;font-size:16px;color:white}
+.fcr{font-size:20px;color:var(--cl);margin:6px 0}
+.fci{font-size:12px;color:rgba(255,255,255,.45);line-height:1.8}
 
-.nav-btn {
-  position: absolute; z-index: 3;
-  width: 100px; height: 100px; border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,.15);
-  background: rgba(10,22,40,.85); backdrop-filter: blur(8px);
-  cursor: pointer; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 4px;
-  transition: all var(--transition);
-  color: rgba(255,255,255,.7);
-  font-size: 28px;
-}
-.nav-btn .nav-label { font-size: 12px; font-weight: 500; letter-spacing: 1px; }
-.nav-btn:hover {
-  border-color: var(--coral); color: var(--coral-light);
-  box-shadow: 0 0 32px rgba(232,115,74,.25);
-  transform: scale(1.08);
-}
+/* TABLE */
+.itbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.itbl td{padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
+.itbl td:first-child{color:rgba(255,255,255,.35);width:80px;white-space:nowrap}
+.itbl td:last-child{color:rgba(255,255,255,.75)}
 
-.nav-btn.transport { top: -60px; left: 50%; transform: translateX(-50%); }
-.nav-btn.accommodation { right: -60px; top: 50%; transform: translateY(-50%); }
-.nav-btn.food { bottom: -60px; left: 50%; transform: translateX(-50%); }
-.nav-btn.play { left: -60px; top: 50%; transform: translateY(-50%); }
+/* TAGS */
+.tg{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:500;margin:1px 3px 1px 0}
+.tr{background:rgba(232,115,74,.2);color:var(--cl)}.tb{background:rgba(52,152,219,.2);color:#85c1e9}
+.tg2{background:rgba(46,204,113,.2);color:#82e0aa}.ty{background:rgba(241,196,15,.2);color:#f9e79f}
 
-/* ===== PANEL OVERLAY ===== */
-.panel-overlay {
-  position: fixed; inset: 0; z-index: 50;
-  background: rgba(0,0,0,.5);
-  opacity: 0; pointer-events: none;
-  transition: opacity .4s;
-}
-.panel-overlay.active { opacity: 1; pointer-events: all; }
+/* MAP */
+.mw{border-radius:var(--rs);overflow:hidden;margin:6px 0;border:1px solid rgba(255,255,255,.06)}
+.mw .mi{width:100%;height:420px}
+.leaflet-popup-content{font-family:'Noto Sans SC',sans-serif!important;font-size:13px!important;line-height:1.6!important;color:#333!important;min-width:200px}
+.leaflet-popup-content strong{color:#e8734a}
 
-/* ===== DETAIL PANELS ===== */
-.detail-panel {
-  position: fixed; z-index: 60;
-  background: linear-gradient(180deg, #0d1f33 0%, #0a1628 100%);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden; display: flex; flex-direction: column;
-  transition: all .5s cubic-bezier(.4,0,.2,1);
-  opacity: 0; pointer-events: none;
-  max-height: 85vh; max-width: 90vw;
-}
-.detail-panel.active { opacity: 1; pointer-events: all; }
+/* HIGHLIGHT BOX */
+.hlb{background:rgba(232,115,74,.08);border:1px solid rgba(232,115,74,.15);border-radius:var(--rs);padding:14px;margin:12px 0}
+.hlb .hlb-title{font-weight:700;color:var(--cl);font-size:14px;margin-bottom:8px}
+.hlb .hlb-text{font-size:12px;color:rgba(255,255,255,.6);line-height:1.7}
 
-.panel-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 24px;
-  border-bottom: 1px solid rgba(255,255,255,.1);
-}
-.panel-header h2 {
-  font-family: 'Noto Serif SC', serif; font-size: 20px;
-  color: var(--gold-light); display: flex; align-items: center; gap: 10px;
-}
-.panel-close {
-  width: 36px; height: 36px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.2); background: none;
-  color: rgba(255,255,255,.6); font-size: 18px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all var(--transition);
-}
-.panel-close:hover { background: rgba(255,255,255,.1); color: white; }
-.panel-body {
-  flex: 1; overflow-y: auto; padding: 20px 24px;
-  color: rgba(255,255,255,.85); line-height: 1.7;
-}
-.panel-body::-webkit-scrollbar { width: 4px; }
-.panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+/* ROUTE MAP (Chimelong) */
+.route-step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.route-num{width:28px;height:28px;border-radius:50%;background:var(--c);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.route-info{flex:1}
+.route-info h5{font-size:14px;color:white;margin-bottom:2px}
+.route-info p{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
 
-/* Panel sizes */
-.panel-center {
-  top: 50%; left: 50%; transform: translate(-50%,-50%) scale(.9);
-  width: min(800px, 92vw);
-}
-.panel-center.active { transform: translate(-50%,-50%) scale(1); }
-
-.panel-full {
-  top: 5vh; left: 5vw; right: 5vw; bottom: 5vh;
-  transform: scale(.95);
-}
-.panel-full.active { transform: scale(1); }
-
-/* ===== CARDS ===== */
-.card-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-.card {
-  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
-  border-radius: var(--radius-sm); overflow: hidden;
-  transition: all var(--transition); cursor: pointer;
-}
-.card:hover {
-  border-color: rgba(232,115,74,.4);
-  box-shadow: 0 8px 32px rgba(0,0,0,.3);
-  transform: translateY(-2px);
-}
-.card-img {
-  height: 160px; display: flex; align-items: center; justify-content: center;
-  font-size: 48px; position: relative;
-}
-.card-img.hotel-penguin { background: linear-gradient(135deg, #1a3a5c 0%, #2c5f8c 100%); }
-.card-img.hotel-spaceship { background: linear-gradient(135deg, #1a1a3e 0%, #3a2a6e 100%); }
-.card-img.villa { background: linear-gradient(135deg, #2d5016 0%, #4a7a2e 100%); }
-.card-img.airport-hotel { background: linear-gradient(135deg, #4a3a1a 0%, #6a5a3a 100%); }
-.card-img .card-img-tag {
-  position: absolute; top: 10px; right: 10px;
-  padding: 4px 10px; border-radius: 20px;
-  background: var(--coral); color: white; font-size: 11px;
-}
-.card-body { padding: 14px; }
-.card-body h4 {
-  font-family: 'Noto Serif SC', serif; font-size: 16px;
-  color: white; margin-bottom: 6px;
-}
-.card-body .meta {
-  font-size: 12px; color: rgba(255,255,255,.5);
-  display: flex; flex-wrap: wrap; gap: 8px;
-}
-.card-body .price {
-  font-size: 18px; font-weight: 700; color: var(--coral-light); margin-top: 8px;
-}
-.card-body .price small { font-size: 12px; font-weight: 400; color: rgba(255,255,255,.4); }
-
-/* ===== TRANSPORT TIMELINE ===== */
-.timeline { position: relative; padding-left: 32px; }
-.timeline::before {
-  content: ''; position: absolute; left: 12px; top: 0; bottom: 0;
-  width: 2px; background: rgba(255,255,255,.1);
-}
-.timeline-item {
-  position: relative; padding: 12px 0;
-}
-.timeline-item::before {
-  content: ''; position: absolute; left: -24px; top: 18px;
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--coral); border: 2px solid var(--ocean-deep);
-}
-.timeline-item .t-date {
-  font-size: 12px; color: var(--gold); font-weight: 600; margin-bottom: 4px;
-}
-.timeline-item .t-content { font-size: 14px; }
-
-/* ===== FLIGHT CARDS ===== */
-.flight-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; }
-.flight-card {
-  flex: 1; min-width: 200px;
-  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
-  border-radius: var(--radius-sm); padding: 16px;
-}
-.flight-card .fc-city {
-  font-family: 'Noto Serif SC', serif; font-size: 18px; color: white;
-}
-.flight-card .fc-route {
-  font-size: 24px; color: var(--coral-light); margin: 8px 0;
-}
-.flight-card .fc-info { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.6; }
-
-/* ===== MAP CONTAINER ===== */
-.map-container {
-  width: 100%; height: 400px; border-radius: var(--radius-sm);
-  overflow: hidden; margin: 12px 0;
-}
-.leaflet-popup-content {
-  font-family: 'Noto Sans SC', sans-serif; font-size: 13px;
-  line-height: 1.6; color: #333;
-}
-.leaflet-popup-content strong { color: var(--coral); }
-
-/* ===== TAGS ===== */
-.tag {
-  display: inline-block; padding: 3px 10px; border-radius: 20px;
-  font-size: 11px; font-weight: 500;
-}
-.tag-red { background: rgba(232,115,74,.2); color: var(--coral-light); }
-.tag-blue { background: rgba(52,152,219,.2); color: #85c1e9; }
-.tag-green { background: rgba(46,204,113,.2); color: #82e0aa; }
-
-/* ===== SECTION HEADERS ===== */
-.section-title {
-  font-family: 'Noto Serif SC', serif; font-size: 17px;
-  color: var(--gold-light); margin: 24px 0 12px;
-  padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.08);
-}
-.section-title:first-child { margin-top: 0; }
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .nav-btn { width: 76px; height: 76px; font-size: 24px; }
-  .nav-btn .nav-label { font-size: 10px; }
-  .nav-btn.transport { top: -46px; }
-  .nav-btn.accommodation { right: -46px; }
-  .nav-btn.food { bottom: -46px; }
-  .nav-btn.play { left: -46px; }
-  .hub-center { width: 90px; height: 90px; }
-  .hub-center .icon { font-size: 28px; }
-  .hub-center .label { font-size: 11px; }
-  .card-grid { grid-template-columns: 1fr; }
-  .flight-row { flex-direction: column; }
+@media(max-width:768px){
+  .nb{width:72px;height:72px;font-size:22px}.nb .nl{font-size:10px}
+  .nb.tr{top:-42px}.nb.ac{right:-42px}.nb.fd{bottom:-42px}.nb.pl{left:-42px}
+  .hcc{width:85px;height:85px}.hcc .i{font-size:26px}.hcc .l{font-size:10px}
+  .cgrid{grid-template-columns:1fr}.frow{flex-direction:column}
+  .dp{max-width:98vw;max-height:92vh}
+  .sidecard{width:100vw;right:-100vw}
 }
 </style>
 </head>
 <body>
 
-<!-- ==================== LANDING PAGE ==================== -->
+<!-- ===== LANDING ===== -->
 <div id="landing">
-  <div class="landing-bg"></div>
-  <div class="landing-waves"></div>
-  <div class="floating-flowers">
-    <span class="flower">🌸</span><span class="flower">🌺</span><span class="flower">🌼</span>
-    <span class="flower">🌷</span><span class="flower">💮</span><span class="flower">🏵️</span>
-  </div>
-  <div class="landing-content">
-    <div class="landing-badge">ZHUHAI · 2026</div>
-    <h1 class="landing-title">三朵金花旅行团</h1>
-    <p class="landing-subtitle">珠海国庆亲子悠游 · 10.01 — 10.06</p>
-    <button class="landing-btn" onclick="enterApp()">
-      ✨ 开启旅程
-    </button>
+  <div class="lbg"></div><div class="lwv"></div>
+  <div class="flf"><span class="fl">🌸</span><span class="fl">🌺</span><span class="fl">🌼</span><span class="fl">🌷</span><span class="fl">💮</span><span class="fl">🏵️</span></div>
+  <div class="lct">
+    <div class="lbd">ZHUHAI · 2026</div>
+    <h1 class="ltt">三朵金花旅行团</h1>
+    <p class="lst">珠海国庆亲子悠游 · 10.01 — 10.06</p>
+    <button class="lbt" onclick="enterApp()">✨ 开启旅程</button>
   </div>
 </div>
 
-<!-- ==================== MAIN APP ==================== -->
-<div id="app" style="display:none;">
+<!-- ===== APP ===== -->
+<div id="app" style="display:none">
+  <button class="mt" id="musicBtn" onclick="toggleMusic()" title="背景音乐">🎵</button>
 
-  <!-- Music Toggle -->
-  <button class="music-toggle" id="musicBtn" onclick="toggleMusic()" title="背景音乐">
-    🎵
-  </button>
-
-  <!-- Navigation Hub -->
   <div id="hub">
-    <div class="hub-bg"></div>
-    <div class="hub-compass">
-      <div class="hub-ring"></div>
-      <div class="hub-ring"></div>
-      <div class="hub-ring"></div>
-
-      <div class="hub-center">
-        <span class="icon">🧭</span>
-        <span class="label">导航中枢</span>
-      </div>
-
-      <button class="nav-btn transport" onclick="openPanel('transport')">
-        ✈️<span class="nav-label">交通</span>
-      </button>
-      <button class="nav-btn accommodation" onclick="openPanel('accommodation')">
-        🏨<span class="nav-label">住宿</span>
-      </button>
-      <button class="nav-btn food" onclick="openPanel('food')">
-        🍜<span class="nav-label">饮食</span>
-      </button>
-      <button class="nav-btn play" onclick="openPanel('play')">
-        🎢<span class="nav-label">游玩</span>
-      </button>
+    <div class="hbb"></div>
+    <div class="hbc">
+      <div class="hbr"></div><div class="hbr"></div><div class="hbr"></div>
+      <div class="hcc"><span class="i">🧭</span><span class="l">导航中枢</span></div>
+      <button class="nb tr" onclick="openPanel('transport')">✈️<span class="nl">交通</span></button>
+      <button class="nb ac" onclick="openPanel('accommodation')">🏨<span class="nl">住宿</span></button>
+      <button class="nb fd" onclick="openPanel('food')">🍜<span class="nl">饮食</span></button>
+      <button class="nb pl" onclick="openPanel('play')">🎢<span class="nl">游玩</span></button>
     </div>
   </div>
 
-  <!-- Panel Overlay -->
-  <div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+  <div class="pov" id="panelOverlay" onclick="closeAll()"></div>
 
   <!-- ===== TRANSPORT PANEL ===== -->
-  <div class="detail-panel panel-center" id="panel-transport">
-    <div class="panel-header">
-      <h2>✈️ 出行交通</h2>
-      <button class="panel-close" onclick="closePanel()">✕</button>
-    </div>
-    <div class="panel-body">
-      <div class="section-title">🎯 最佳订票窗口</div>
-      <div class="tag tag-red" style="margin-right:6px;">8月15日～8月25日</div>
-      <span style="font-size:13px;color:rgba(255,255,255,.5);">每周二/三 14:00-16:00 价格最低</span>
+  <div class="dp dpc" id="panel-transport">
+    <div class="ph"><h2>✈️ 出行交通全攻略</h2><button class="px" onclick="closeAll()">✕</button></div>
+    <div class="pb">
+      <div class="st">🎯 订票黄金窗口</div>
+      <p style="margin:4px 0 10px;font-size:13px"><span class="tg tr">8月15日～25日</span> <span class="tg ty">每周二/三 14:00-16:00</span> <span class="tg tb">携程/飞猪/航司官网</span></p>
 
-      <div class="section-title">🛫 成都出发</div>
-      <div class="flight-row">
-        <div class="flight-card">
-          <div class="fc-city">成都 → 珠海</div>
-          <div class="fc-route">CTU ✈ ZUH</div>
-          <div class="fc-info">
-            方案A：直飞金湾机场<br>
-            🕐 约2.5h &nbsp;|&nbsp; 💰 ¥1,200～1,800<br>
-            国航/川航/东航执飞<br><br>
-            <strong>🔥 推荐方案B：</strong>飞广州白云<br>
-            → 地铁广州南 → 广珠城际(1h ¥70)<br>
-            💰 比直飞便宜约30%
-          </div>
+      <div class="st">🛫 成都 → 珠海</div>
+      <div class="frow">
+        <div class="fcd" onclick="openSidecard('flight-chengdu-direct')">
+          <div class="fcc">方案A：直飞金湾</div><div class="fcr">TFU ✈ ZUH</div>
+          <div class="fci">国航CA / 川航3U / 东航MU · 约2.5h<br>¥1,200～1,800/人 · 7:00-9:00出发最佳<br><span style="color:var(--cl)">👆 点击查看具体航班 →</span></div>
         </div>
-        <div class="flight-card">
-          <div class="fc-city">成都 → 广州 → 珠海</div>
-          <div class="fc-route">CTU ✈ CAN 🚄 ZUH</div>
-          <div class="fc-info">
-            飞广州白云机场<br>
-            → 地铁3号线到广州南站(约1h)<br>
-            → 广珠城际到珠海站(约1h ¥70)<br>
-            🕐 总计约4.5h<br>
-            💰 机票 ¥1,000 + 高铁 ¥70<br><br>
-            <strong>⚠️ 高铁票9月16日早8点开抢！</strong>
-          </div>
+        <div class="fcd" onclick="openSidecard('flight-chengdu-gz')">
+          <div class="fcc">🔥 方案B：飞广州+高铁</div><div class="fcr">TFU ✈ CAN 🚄 ZUH</div>
+          <div class="fci">机票 ¥1,000 + 高铁 ¥70 = ¥1,070<br>比直飞便宜约30%<br><span style="color:var(--cl)">👆 点击查看详细步骤 →</span></div>
         </div>
       </div>
 
-      <div class="section-title">🛫 杭州出发</div>
-      <div class="flight-row">
-        <div class="flight-card">
-          <div class="fc-city">杭州 → 珠海</div>
-          <div class="fc-route">HGH ✈ ZUH</div>
-          <div class="fc-info">
-            直飞金湾机场<br>
-            🕐 约2h &nbsp;|&nbsp; 💰 ¥800～1,200<br>
-            多航司执飞，国庆涨幅温和<br><br>
-            <strong>💡 10月2日出发比10月1日便宜约30%</strong>
-          </div>
+      <div class="st">🛫 杭州 → 珠海</div>
+      <div class="frow">
+        <div class="fcd" onclick="openSidecard('flight-hangzhou')">
+          <div class="fcc">直飞（推荐）</div><div class="fcr">HGH ✈ ZUH</div>
+          <div class="fci">多航司执飞 · 约2h · ¥800～1,200/人<br>10月2日出发比10月1日便宜约30%<br><span style="color:var(--cl)">👆 点击查看具体航班 →</span></div>
         </div>
       </div>
 
-      <div class="section-title">🚕 珠海市内交通</div>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="t-date">机场 → 长隆</div>
-          <div class="t-content">滴滴6座商务车，约50min，¥150～200</div>
-        </div>
-        <div class="timeline-item">
-          <div class="t-date">长隆 → 市区别墅</div>
-          <div class="t-content">滴滴商务车，约40min，¥100～150</div>
-        </div>
-        <div class="timeline-item">
-          <div class="t-date">市区景点间</div>
-          <div class="t-content">滴滴 ¥30～80/程 &nbsp;|&nbsp; 情侣路推荐骑行</div>
-        </div>
-        <div class="timeline-item">
-          <div class="t-date">🚫 不建议租车</div>
-          <div class="t-content">国庆情侣路日均10万辆车，20分钟堵成1小时+<br>6人打商务车刚好，人均极便宜</div>
-        </div>
+      <div class="st">🚕 珠海市内交通</div>
+      <div class="tl">
+        <div class="ti"><div class="td">机场 → 长隆</div><div class="tc">滴滴6座商务车 · 约50min · ¥150～200</div></div>
+        <div class="ti"><div class="td">长隆各园区间</div><div class="tc">酒店免费接驳车 · 15分钟一班</div></div>
+        <div class="ti"><div class="td">长隆 → 唐家湾别墅</div><div class="tc">滴滴商务车 · 约40min · ¥100～150</div></div>
+        <div class="ti"><div class="td">市区景点间</div><div class="tc">滴滴 ¥30～80/程 · 情侣路推荐骑行 ¥30/h</div></div>
+        <div class="ti"><div class="td">公交备选</div><div class="tc">K10/K11路直达长隆 · 观光巴士 ¥5/人</div></div>
       </div>
+      <div class="hlb"><div class="hlb-title">🚫 不租车理由</div><div class="hlb-text">国庆情侣路日均10万辆外来车，20分钟堵成1小时+。别克GL8国庆租车¥1200/天+停车¥50/天，远不如6人打商务车划算。</div></div>
     </div>
   </div>
 
   <!-- ===== ACCOMMODATION PANEL ===== -->
-  <div class="detail-panel panel-center" id="panel-accommodation">
-    <div class="panel-header">
-      <h2>🏨 住宿安排</h2>
-      <button class="panel-close" onclick="closePanel()">✕</button>
-    </div>
-    <div class="panel-body">
-      <div class="section-title">🎯 最佳预订窗口</div>
-      <div class="tag tag-red">8月10日～8月20日 长隆酒店</div>
-      <div class="tag tag-red" style="margin-left:4px;">8月25日～9月5日 别墅</div>
-
-      <div class="card-grid">
-        <div class="card">
-          <div class="card-img hotel-penguin">
-            🐧<span class="card-img-tag">10.1入住</span>
-          </div>
-          <div class="card-body">
-            <h4>长隆企鹅酒店</h4>
-            <div class="meta">
-              <span>⭐ 亲子天花板</span><span>🕐 2分钟到园区</span>
-            </div>
-            <div class="price">¥2,800～3,200 <small>/间/晚</small></div>
-            <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">
-              ✅ 住客提前1h入园 &nbsp;|&nbsp; ✅ 专属通道<br>
-              ✅ 帝企鹅餐厅看真企鹅 &nbsp;|&nbsp; ✅ 亲子配套最全<br>
-              预订：长隆旅游APP &nbsp;|&nbsp; 客服：400-883-0083
-            </p>
+  <div class="dp dpc" id="panel-accommodation">
+    <div class="ph"><h2>🏨 住宿全攻略</h2><button class="px" onclick="closeAll()">✕</button></div>
+    <div class="pb">
+      <div class="st">🎯 订房窗口 <span class="tg tr">8.10-20 长隆</span><span class="tg tr">8.25-9.5 别墅</span></div>
+      <div class="cgrid">
+        <div class="crd" onclick="openSidecard('hotel-penguin')">
+          <div class="crd-img p1">🐧<span class="crd-tag">10.1 入住</span></div>
+          <div class="crd-body">
+            <h4>长隆企鹅酒店 ⭐⭐⭐⭐</h4>
+            <div class="crd-meta"><span>📍 紧邻海洋王国</span><span>🕐 2分钟步道</span></div>
+            <div class="crd-price">¥2,800～3,200 <s>/间/晚</s></div>
+            <div class="crd-desc">住客8:30提前入园 · 帝企鹅餐厅 · 亲子配套最全</div>
+            <span class="crd-arrow">→</span>
           </div>
         </div>
-        <div class="card">
-          <div class="card-img hotel-spaceship">
-            🚀<span class="card-img-tag">10.2入住</span>
-          </div>
-          <div class="card-body">
-            <h4>长隆飞船酒店</h4>
-            <div class="meta">
-              <span>🆕 2025年新开</span><span>🏊 无边泳池</span>
-            </div>
-            <div class="price">¥2,800～3,400 <small>/间/晚</small></div>
-            <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">
-              ✅ 室内直通飞船乐园 &nbsp;|&nbsp; ✅ 无限次免费入园<br>
-              ✅ 全区智能新科技 &nbsp;|&nbsp; ✅ 顶楼无边泳池
-            </p>
+        <div class="crd" onclick="openSidecard('hotel-spaceship')">
+          <div class="crd-img p2">🚀<span class="crd-tag">10.2 入住</span></div>
+          <div class="crd-body">
+            <h4>长隆飞船酒店 ⭐⭐⭐⭐</h4>
+            <div class="crd-meta"><span>🆕 2025新开</span><span>🏊 无边泳池</span></div>
+            <div class="crd-price">¥2,800～3,400 <s>/间/晚</s></div>
+            <div class="crd-desc">室内直通飞船乐园 · 无限次入园 · 全区智能</div>
+            <span class="crd-arrow">→</span>
           </div>
         </div>
-        <div class="card">
-          <div class="card-img villa">
-            🏡<span class="card-img-tag">10.3-4入住</span>
-          </div>
-          <div class="card-body">
+        <div class="crd" onclick="openSidecard('hotel-villa')">
+          <div class="crd-img p3">🏡<span class="crd-tag">10.3-4 入住</span></div>
+          <div class="crd-body">
             <h4>归墅度假别墅 · 唐家湾</h4>
-            <div class="meta">
-              <span>250㎡</span><span>4房2厅</span><span>🎤KTV</span>
-            </div>
-            <div class="price">¥2,500～3,500 <small>/栋/晚</small></div>
-            <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">
-              ✅ 整栋独享 &nbsp;|&nbsp; ✅ 厨房+烧烤炉<br>
-              ✅ 桌球+麻将 &nbsp;|&nbsp; ✅ 庭院看星星<br>
-              携程搜「归墅度假别墅(珠海唐家湾店)」<br>
-              唐家湾镇东岸村南堡路5号
-            </p>
+            <div class="crd-meta"><span>250㎡独栋</span><span>4房2厅</span><span>庭院30㎡</span></div>
+            <div class="crd-price">¥2,500～3,500 <s>/栋/晚</s></div>
+            <div class="crd-desc">KTV+桌球+烧烤 · 一家人整栋独享</div>
+            <span class="crd-arrow">→</span>
           </div>
         </div>
-        <div class="card">
-          <div class="card-img airport-hotel">
-            🏢<span class="card-img-tag">10.5入住</span>
-          </div>
-          <div class="card-body">
+        <div class="crd" onclick="openSidecard('hotel-airport')">
+          <div class="crd-img p4">🏢<span class="crd-tag">10.5 入住</span></div>
+          <div class="crd-body">
             <h4>金湾机场附近酒店</h4>
-            <div class="meta">
-              <span>🚶 步行到机场</span><span>次日返程</span>
-            </div>
-            <div class="price">¥400～600 <small>/间/晚</small></div>
-            <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">
-              携程/飞猪 9月10日～15日预订<br>
-              多家可选，库存充足
-            </p>
+            <div class="crd-meta"><span>🚶 步行到航站楼</span><span>次日返程</span></div>
+            <div class="crd-price">¥400～600 <s>/间/晚</s></div>
+            <div class="crd-desc">10.6自然醒 → 从容返程</div>
+            <span class="crd-arrow">→</span>
           </div>
         </div>
       </div>
+      <div class="st">📊 住宿费用汇总</div>
+      <table class="itbl">
+        <tr><td>10.1 企鹅×2</td><td>¥6,000</td></tr><tr><td>10.2 飞船×2</td><td>¥6,400</td></tr>
+        <tr><td>10.3-4 别墅</td><td>¥6,000</td></tr><tr><td>10.5 机场×2</td><td>¥1,000</td></tr>
+        <tr><td><strong>合计</strong></td><td><strong>¥19,400（6人 ≈ ¥3,233/人）</strong></td></tr>
+      </table>
     </div>
   </div>
 
-  <!-- ===== FOOD PANEL (MAP) ===== -->
-  <div class="detail-panel panel-full" id="panel-food">
-    <div class="panel-header">
-      <h2>🍜 美食地图</h2>
-      <button class="panel-close" onclick="closePanel()">✕</button>
-    </div>
-    <div class="panel-body" style="padding:0; display:flex; flex-direction:column;">
-      <div id="foodMap" class="map-container" style="flex:1; min-height:300px; height:100%;"></div>
-      <div style="padding:12px 24px; display:flex; flex-wrap:wrap; gap:8px; font-size:12px; color:rgba(255,255,255,.5);">
-        <span>🦪 横琴蚝 · 珠海招牌</span>
-        <span>|</span><span>🦞 湾仔海鲜街</span>
-        <span>|</span><span>🐧 帝企鹅自助餐厅</span>
-        <span>|</span><span>🍵 金悦轩</span>
-        <span>|</span><span>🦀 斗门重壳蟹</span>
-        <span>|</span><span>🍜 唐家古镇·茶果</span>
+  <!-- ===== FOOD PANEL ===== -->
+  <div class="dp dpf" id="panel-food">
+    <div class="ph"><h2>🍜 珠海美食地图</h2><button class="px" onclick="closeAll()">✕</button></div>
+    <div class="pb" style="padding:0;display:flex;flex-direction:column">
+      <div class="mw" style="flex:1;margin:0;border-radius:0"><div id="foodMap" class="mi" style="height:100%;min-height:380px"></div></div>
+      <div style="padding:10px 20px;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.06)">
+        <span>🦪横琴蚝</span><span>🦞湾仔海鲜街</span><span>🐧帝企鹅餐厅</span><span>🍵金悦轩早茶</span><span>🦀重壳蟹</span><span>🫘唐家茶果</span><span>🌅Orange Sea</span><span>🦪生蚝火锅</span>
       </div>
     </div>
   </div>
 
-  <!-- ===== PLAY PANEL (MAP) ===== -->
-  <div class="detail-panel panel-full" id="panel-play">
-    <div class="panel-header">
-      <h2>🎢 游玩地图</h2>
-      <button class="panel-close" onclick="closePanel()">✕</button>
-    </div>
-    <div class="panel-body" style="padding:0; display:flex; flex-direction:column;">
-      <div id="playMap" class="map-container" style="flex:1; min-height:300px; height:100%;"></div>
-      <div style="padding:12px 24px; display:flex; flex-wrap:wrap; gap:8px; font-size:12px; color:rgba(255,255,255,.5);">
-        <span>🐋 长隆海洋王国 · 2日</span><span>|</span>
-        <span>🚀 飞船乐园 · 半天</span><span>|</span>
-        <span>💌 爱情邮局</span><span>|</span>
-        <span>🏖️ 香炉湾沙滩</span><span>|</span>
-        <span>🏔️ 景山公园</span><span>|</span>
-        <span>🐚 日月贝</span><span>|</span>
-        <span>🎭 珠海博物馆</span><span>|</span>
-        <span>🏘️ 唐家古镇</span>
+  <!-- ===== PLAY PANEL ===== -->
+  <div class="dp dpf" id="panel-play">
+    <div class="ph"><h2>🎢 游玩全地图</h2><button class="px" onclick="closeAll()">✕</button></div>
+    <div class="pb" style="padding:0;display:flex;flex-direction:column">
+      <div class="mw" style="flex:1;margin:0;border-radius:0"><div id="playMap" class="mi" style="height:100%;min-height:380px"></div></div>
+      <div style="padding:10px 20px;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.06)">
+        <span>🐋海洋王国</span><span>🚀飞船乐园</span><span>💌爱情邮局</span><span>🏖️香炉湾</span><span>🏔️景山公园</span><span>🐚日月贝</span><span>🏛️博物馆</span><span>🏘️唐家古镇</span><span>🌅Orange Sea</span>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ===== SIDE DETAIL CARD ===== -->
+<div class="sc-backdrop" id="scBackdrop" onclick="closeSidecard()"></div>
+<div class="sidecard" id="sidecard">
+  <div class="sch">
+    <button class="sc-back" onclick="closeSidecard()">← 返回</button>
+    <h3 id="scTitle">详情</h3>
+    <button class="px" onclick="closeSidecard()">✕</button>
+  </div>
+  <div class="scb" id="scBody"></div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// ===== STATE =====
-let activePanel = null;
-let foodMap = null, playMap = null;
-let audioCtx = null, musicPlaying = false;
+let activePanel=null,mapsInit={food:false,play:false},foodMap=null,playMap=null,audioCtx=null,musicPlaying=false;
+let currentSidecard=null;
 
-// ===== ENTER APP =====
-function enterApp() {
-  document.getElementById('landing').classList.add('hidden');
-  const app = document.getElementById('app');
-  app.style.display = 'block';
-  app.style.animation = 'fadeInUp .6s ease both';
-  initMaps();
+function enterApp(){document.getElementById('landing').classList.add('hidden');document.getElementById('app').style.display='block'}
+
+function toggleMusic(){
+  const btn=document.getElementById('musicBtn');
+  if(!musicPlaying){
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const ctx=audioCtx,now=ctx.currentTime,buf=ctx.createBuffer(1,ctx.sampleRate*4,ctx.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*0.05;
+    const n=ctx.createBufferSource();n.buffer=buf;n.loop=true;
+    const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=320;lp.Q.value=1;
+    const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=50;
+    const g=ctx.createGain();g.gain.value=0.02;
+    n.connect(lp);lp.connect(hp);hp.connect(g);g.connect(ctx.destination);n.start();
+    const notes=[262,330,392,523];
+    function chime(){if(!musicPlaying)return;const t=ctx.currentTime;
+      notes.forEach((f,i)=>{const o=ctx.createOscillator(),gg=ctx.createGain();o.type='sine';o.frequency.value=f;gg.gain.setValueAtTime(0,t);gg.gain.linearRampToValueAtTime(0.012,t+i*3+1);gg.gain.linearRampToValueAtTime(0,t+i*3+5);o.connect(gg);gg.connect(ctx.destination);o.start(t+i*3);o.stop(t+i*3+5)});
+    }chime();setInterval(chime,12000);
+    musicPlaying=true;btn.classList.add('on');btn.textContent='🔊';
+  }else{if(audioCtx){audioCtx.close();audioCtx=null}musicPlaying=false;btn.classList.remove('on');btn.textContent='🎵'}
 }
-document.getElementById('app').addEventListener('animationend', function(e) {
-  if (e.animationName === 'fadeInUp') foodMap && foodMap.invalidateSize();
-});
 
-// ===== MUSIC =====
-function toggleMusic() {
-  const btn = document.getElementById('musicBtn');
-  if (!musicPlaying) {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    startAmbient(audioCtx);
-    musicPlaying = true;
-    btn.classList.add('playing');
-    btn.textContent = '🔊';
-  } else {
-    if (audioCtx) { audioCtx.close(); audioCtx = null; }
-    musicPlaying = false;
-    btn.classList.remove('playing');
-    btn.textContent = '🎵';
+function openPanel(type){
+  closeAll();
+  document.getElementById('panelOverlay').classList.add('on');
+  const p=document.getElementById('panel-'+type);p.classList.add('on');activePanel=type;
+  if(type==='food'&&!mapsInit.food){initFoodMap();mapsInit.food=true}
+  if(type==='play'&&!mapsInit.play){initPlayMap();mapsInit.play=true}
+  setTimeout(()=>{if(type==='food'&&foodMap)foodMap.invalidateSize();if(type==='play'&&playMap)playMap.invalidateSize()},200);
+}
+
+function closeAll(){
+  document.getElementById('panelOverlay').classList.remove('on');
+  if(activePanel){document.getElementById('panel-'+activePanel).classList.remove('on');activePanel=null}
+  closeSidecard();
+}
+
+function openSidecard(id){
+  closeSidecard();
+  currentSidecard=id;
+  document.getElementById('scBackdrop').classList.add('on');
+  document.getElementById('sidecard').classList.add('on');
+  document.getElementById('scTitle').innerHTML=sidecardTitle(id);
+  document.getElementById('scBody').innerHTML=sidecardContent(id);
+}
+
+function closeSidecard(){
+  document.getElementById('scBackdrop').classList.remove('on');
+  document.getElementById('sidecard').classList.remove('on');
+  currentSidecard=null;
+}
+
+// ===== SIDECARD CONTENT GENERATOR =====
+function sidecardTitle(id){
+  const titles={
+    'flight-chengdu-direct':'✈️ 成都直飞珠海 · 航班详情',
+    'flight-chengdu-gz':'🔥 成都飞广州+高铁 · 详细步骤',
+    'flight-hangzhou':'✈️ 杭州直飞珠海 · 航班详情',
+    'hotel-penguin':'🐧 长隆企鹅酒店 · 详情',
+    'hotel-spaceship':'🚀 长隆飞船酒店 · 详情',
+    'hotel-villa':'🏡 归墅度假别墅 · 详情',
+    'hotel-airport':'🏢 金湾机场酒店 · 详情',
+    'food-0':'🐧 帝企鹅自助餐厅','food-1':'🦞 湾仔海鲜街','food-2':'🍵 金悦轩海鲜酒家',
+    'food-3':'🍽️ 扬名广场美食区','food-4':'🫘 唐家古镇·非遗茶果','food-5':'🌅 21℃ Orange Sea',
+    'food-6':'🦪 濠轩阁生蚝火锅','food-7':'🐋 海底餐厅',
+    'play-0':'🐋 长隆海洋王国 · 超详细攻略','play-1':'🚀 长隆飞船乐园','play-2':'💌 爱情邮局+灯塔',
+    'play-3':'🏖️ 香炉湾沙滩','play-4':'🏔️ 景山公园·落日飞车','play-5':'🧜‍♀️ 珠海渔女',
+    'play-6':'🐚 日月贝·野狸岛','play-7':'🏛️ 珠海博物馆','play-8':'🏘️ 唐家古镇',
+    'play-9':'🏠 归墅度假别墅','play-10':'🌅 Orange Sea日落餐厅'
+  };
+  return titles[id]||'详情';
+}
+
+function sidecardContent(id){
+  const c=id;
+  // === FLIGHTS ===
+  if(c==='flight-chengdu-direct')return `
+    <div class="st">推荐航班（成都天府 → 珠海金湾）</div>
+    <div class="imgph combo">
+      <div class="iph-item"><span class="iph-emoji">🛫</span><span class="iph-text">国航 CA</span></div>
+      <div class="iph-item"><span class="iph-emoji">🛫</span><span class="iph-text">川航 3U</span></div>
+      <div class="iph-item"><span class="iph-emoji">🛫</span><span class="iph-text">东航 MU</span></div>
+    </div>
+    <table class="itbl">
+      <tr><td>⌚ 建议时段</td><td>7:00 - 9:00 AM（早班机最稳，中午前落地）</td></tr>
+      <tr><td>⏱️ 飞行</td><td>约 2小时30分钟 · 直飞无经停</td></tr>
+      <tr><td>💰 国庆价</td><td>单程 ¥1,200～1,800/人</td></tr>
+      <tr><td>📱 订票</td><td>携程/飞猪 搜「成都→珠海」· 8月15日开订</td></tr>
+      <tr><td>💡 技巧</td><td>设价格提醒 · 周二下午2点刷 · 越早越便宜</td></tr>
+      <tr><td>🛄 行李</td><td>经济舱20kg托运 + 7kg手提</td></tr>
+    </table>
+    <a href="https://flights.ctrip.com/booking/CTU-ZUH-day-1.html" target="_blank" style="display:block;text-align:center;padding:12px;margin:12px 0;background:var(--c);color:white;border-radius:var(--rs);text-decoration:none;font-weight:600;font-size:14px">🛫 去携程查成都→珠海实时票价 →</a>
+    <div class="hlb"><div class="hlb-title">⚠️ 重要</div><div class="hlb-text">杭州过来的小伙伴也尽量选相近落地时间的航班，落地差距控制在30分钟内，方便一起打车去酒店。</div></div>`;
+
+  if(c==='flight-chengdu-gz')return `
+    <div class="st">🔥 省钱路线：飞广州 + 高铁到珠海</div>
+    <div class="imgph combo">
+      <div class="iph-item"><span class="iph-emoji">✈️</span><span class="iph-text">Step 1: 飞广州</span></div>
+      <div class="iph-item"><span class="iph-emoji">🚇</span><span class="iph-text">Step 2: 地铁</span></div>
+      <div class="iph-item"><span class="iph-emoji">🚄</span><span class="iph-text">Step 3: 高铁</span></div>
+    </div>
+    <div class="route-step"><div class="route-num">1</div><div class="route-info"><h5>✈️ 成都飞广州白云机场</h5><p>国航/南航/川航多航班可选 · 约2h · 国庆预估 ¥1,000/人</p></div></div>
+    <div class="route-step"><div class="route-num">2</div><div class="route-info"><h5>🚇 白云机场 → 广州南站</h5><p>地铁3号线到嘉禾望岗 → 换2号线到广州南 · 约1h · ¥10</p></div></div>
+    <div class="route-step"><div class="route-num">3</div><div class="route-info"><h5>🚄 广州南 → 珠海站</h5><p>广珠城际 · 约1h · ¥70/人 · <span class="tg tr">9月16日早8:00 12306开抢！</span></p></div></div>
+    <div class="hlb"><div class="hlb-title">💰 省钱对比</div><div class="hlb-text">直飞 ¥1,800 vs 飞广州+高铁 ¥1,070 = <strong>每人省 ¥730</strong>。6人合计省 ¥4,380。多花2小时，值不值你判断。</div></div>
+    <a href="https://flights.ctrip.com/booking/CTU-CAN-day-1.html" target="_blank" style="display:block;text-align:center;padding:12px;margin:12px 0;background:var(--c);color:white;border-radius:var(--rs);text-decoration:none;font-weight:600;font-size:14px">🛫 去携程查成都→广州实时票价 →</a>
+    <a href="https://www.12306.cn/" target="_blank" style="display:block;text-align:center;padding:12px;margin:8px 0;background:rgba(255,255,255,.08);color:var(--gl);border-radius:var(--rs);text-decoration:none;font-weight:600;font-size:14px;border:1px solid rgba(255,255,255,.1)">🚄 去12306抢广珠城际高铁票 →</a>`;
+
+  if(c==='flight-hangzhou')return `
+    <div class="st">杭州萧山 → 珠海金湾 直飞</div>
+    <div class="imgph combo">
+      <div class="iph-item"><span class="iph-emoji">🛫</span><span class="iph-text">国航/南航</span></div>
+      <div class="iph-item"><span class="iph-emoji">🛫</span><span class="iph-text">厦航/长龙</span></div>
+    </div>
+    <table class="itbl">
+      <tr><td>⌚ 建议时段</td><td>7:00 - 9:00 AM 早班机</td></tr>
+      <tr><td>⏱️ 飞行</td><td>约 2小时 直飞</td></tr>
+      <tr><td>💰 国庆价</td><td>单程 ¥800～1,200/人</td></tr>
+      <tr><td>💡 省钱</td><td>10月2日出发比10月1日便宜 ~30%</td></tr>
+      <tr><td>📱 订票</td><td>携程/飞猪/去哪儿 · 8月15日开订</td></tr>
+    </table>
+    <a href="https://flights.ctrip.com/booking/HGH-ZUH-day-1.html" target="_blank" style="display:block;text-align:center;padding:12px;margin:12px 0;background:var(--c);color:white;border-radius:var(--rs);text-decoration:none;font-weight:600;font-size:14px">🛫 去携程查杭州→珠海实时票价 →</a>
+    <div class="hlb"><div class="hlb-title">💡 建议</div><div class="hlb-text">杭州飞珠海航班比成都多，价格也便宜。和成都小伙伴协调好落地时间，差距控制在30分钟内。</div></div>`;
+
+  // === HOTELS ===
+  if(c==='hotel-penguin')return `
+    <div class="st">🐧 长隆企鹅酒店 · 亲子天花板</div>
+    <div class="imgph combo">
+      <div class="iph-item"><span class="iph-emoji">🛏️</span><span class="iph-text">极地房</span></div>
+      <div class="iph-item"><span class="iph-emoji">🐧</span><span class="iph-text">企鹅餐厅</span></div>
+      <div class="iph-item"><span class="iph-emoji">🚶</span><span class="iph-text">2分钟入园</span></div>
+      <div class="iph-item"><span class="iph-emoji">👶</span><span class="iph-text">儿童配套</span></div>
+    </div>
+    <table class="itbl">
+      <tr><td>📍 位置</td><td>横琴新区，紧邻海洋王国入口</td></tr>
+      <tr><td>🕐 入住</td><td>14:00后 · 退房12:00前</td></tr>
+      <tr><td>🛏️ 房型</td><td>极地房/温带房/烟花景观房/企鹅家庭房</td></tr>
+      <tr><td>💰 国庆价</td><td>¥2,800～3,200/间/晚</td></tr>
+      <tr><td>🍽️ 餐饮</td><td>帝企鹅自助餐厅 早餐¥159 晚餐¥258</td></tr>
+      <tr><td>🎫 特权</td><td>8:30提前入园 · 专属通道 · 套票8折快速腕带</td></tr>
+      <tr><td>👶 配套</td><td>儿童护栏/浴盆/马桶圈/拖鞋/洗漱品</td></tr>
+    </table>
+    <div class="hlb"><div class="hlb-title">✅ 住这里的理由</div><div class="hlb-text">国庆期间住客提前1小时入园是<strong>救命特权</strong>。中午走2分钟回房午休，下午继续玩——这是带娃游长隆的核心策略。</div></div>
+    <div class="hlb"><div class="hlb-title">⚠️ 注意</div><div class="hlb-text">开业较早，基础房偏小无阳台。国庆大堂、餐厅排队严重。但亲子刚需首选，没得选。</div></div>
+    <a href="https://www.chimelong.com/zh/Penguinhotel/" target="_blank" style="display:block;text-align:center;padding:12px;margin:10px 0;background:var(--c);color:white;border-radius:var(--rs);text-decoration:none;font-weight:600;font-size:14px">🏨 长隆官网订企鹅酒店套票 →</a>`;
+
+  if(c==='hotel-spaceship')return `
+    <div class="st">🚀 长隆飞船酒店 · 2025全新</div>
+    <div class="imgph combo">
+      <div class="iph-item"><span class="iph-emoji">🆕</span><span class="iph-text">2025新开</span></div>
+      <div class="iph-item"><span class="iph-emoji">🏊</span><span class="iph-text">无边泳池</span></div>
+      <div class="iph-item"><span class="iph-emoji">🚪</span><span class="iph-text">直通乐园</span></div>
+      <div class="iph-item"><span class="iph-emoji">🤖</span><span class="iph-text">全屋智能</span></div>
+    </div>
+    <table class="itbl">
+      <tr><td>📍 位置</td><td>横琴新区，室内直通飞船乐园</td></tr>
+      <tr><td>🕐 入住</td><td>14:00后 · 退房12:00前</td></tr>
+      <tr><td>💰 国庆价</td><td>¥2,800～3,400/间/晚</td></tr>
+      <tr><td>🎫 特权</td><td>飞船乐园<strong>无限次免费入园</strong></td></tr>
+      <tr><td>🏊 泳池</td><td>顶楼无边泳池（额外收费）</td></tr>
+      <tr><td>🚌 交通</td><td>免费接驳车到海洋王国约5分钟</td></tr>
+    </table>
+    <div class="hlb"><div class="hlb-title">✅ 为什么选它</div><div class="hlb-text">第二天白天玩飞船乐园，住客免费无限次。晚上还可以去海洋王国看烟花。新酒店设施最新、拍照最出片。</div></div>
+    <a href="https://www.chimelong.com/zh/" target="_blank" style="display:block;text-align:center;padding:12px;margin:10px 0;background:var(--c);color:white;border-radius:var(--rs);text-decoration:none;font-weight:600;font-size:14px">🏨 长隆官网订飞船酒店 →</a>`;
+
+  if(c==='hotel-villa')return `
+    <div class="st">🏡 归墅度假别墅 · 唐家湾</div>
+    <div class="imgph combo">
+      <div class="iph-item"><span class="iph-emoji">🏠</span><span class="iph-text">250㎡独栋</span></div>
+      <div class="iph-item"><span class="iph-emoji">🛏️</span><span class="iph-text">4房2厅</span></div>
+      <div class="iph-item"><span class="iph-emoji">🌿</span><span class="iph-text">30㎡庭院</span></div>
+      <div class="iph-item"><span class="iph-emoji">🍖</span><span class="iph-text">BBQ烧烤</span></div>
+    </div>
+    <table class="itbl">
+      <tr><td>📍 地址</td><td>唐家湾镇东岸村南堡路5号</td></tr>
+      <tr><td>🕐 入住</td><td>14:00后 · 退房12:00前</td></tr>
+      <tr><td>💰 国庆价</td><td>¥2,500～3,500/栋/晚</td></tr>
+      <tr><td>🎮 娱乐</td><td>KTV · 麻将桌 · 桌球台 · 庭院烧烤</td></tr>
+      <tr><td>🍳 厨房</td><td>全功能厨房，给小朋友做爱吃的</td></tr>
+      <tr><td>🚗 周边</td><td>唐家湾沙滩5分钟 · 情侣路10分钟 · 古镇步行</td></tr>
+      <tr><td>📞 预订</td><td>携程搜「归墅度假别墅(珠海唐家湾店)」</td></tr>
+    </table>
+    <div class="hlb"><div class="hlb-title">✨ 亮点</div><div class="hlb-text">一家人在一起！白天出去玩，晚上回来烧烤K歌。院子看星星，比酒店自由太多。带小朋友的家庭强烈推荐。</div></div>
+    <a href="https://hotels.ctrip.com/hotel/zhuhai27" target="_blank" style="display:block;text-align:center;padding:12px;margin:10px 0;background:var(--c);color:white;border-radius:var(--rs);text-decoration:none;font-weight:600;font-size:14px">🏡 去携程搜唐家湾别墅 →</a>`;
+
+  if(c==='hotel-airport')return `
+    <div class="st">🏢 金湾机场附近 · 10.5过渡</div>
+    <table class="itbl">
+      <tr><td>📍 位置</td><td>步行5-10分钟到金湾机场航站楼</td></tr>
+      <tr><td>💰 国庆价</td><td>¥400～600/间/晚</td></tr>
+      <tr><td>📱 预订</td><td>携程/飞猪 · 9月10日～15日预订</td></tr>
+      <tr><td>✈️ 返程</td><td>10月6日下午航班，上午自然醒，从容出发</td></tr>
+    </table>
+    <div class="hlb"><div class="hlb-title">💡 为什么住机场边</div><div class="hlb-text">最后一天不赶路。从酒店步行几分钟就到航站楼，提前1小时到机场足够。睡到自然醒，假期完美收官。</div></div>
+    <a href="https://hotels.ctrip.com/hotel/zhuhai27" target="_blank" style="display:block;text-align:center;padding:12px;margin:10px 0;background:var(--c);color:white;border-radius:var(--rs);text-decoration:none;font-weight:600;font-size:14px">🏢 去携程搜金湾机场酒店 →</a>`;
+
+  // === FOOD ===
+  if(c.startsWith('food-')){
+    const foods=[
+      {name:'帝企鹅自助餐厅',em:'🐧',desc:'<strong>和真企鹅一起吃饭！</strong><br>帝企鹅自助餐厅是长隆企鹅酒店的招牌餐厅，最大特色是巨大的企鹅展缸——你一边用餐，企鹅就在玻璃后面游泳。<br><br><strong>🔥 靠窗位需要提前一天在酒店童趣廊预订！</strong><br><br>📍 企鹅酒店1层<br>🕐 早餐 7:30-10:30 · 晚餐 17:30-21:30<br>💰 早餐 ¥159/成人 · 晚餐 ¥258/成人 · 儿童半价<br>🍽️ 海鲜、烤肉、日料、甜品、儿童专区<br>⭐ 体验＞口味，小朋友全程兴奋',
+        dish:'🍽️ 推荐：海鲜刺身 · 现烤牛排 · 哈根达斯冰淇淋 · 儿童餐区的企鹅造型点心',imgs:'🐧🍽️🦞🍰'},
+      {name:'湾仔海鲜街',em:'🦞',desc:'<strong>珠海最地道的海鲜体验！</strong><br>一楼是海鲜市场，自己挑选活蹦乱跳的海鲜；二楼是加工餐厅，现捞现做。皮皮虾还在跳就下锅了。<br><br>📍 香洲区湾仔镇<br>🕐 全天营业（推荐17:00-21:00）<br>💰 人均 ¥80-150（海鲜+加工费）<br>⚠️ 货比三家 · 盯紧称 · 砍价',
+        dish:'🍽️ 必点：椒盐皮皮虾 · 清蒸石斑鱼 · 炭烧横琴蚝 · 白灼基围虾 · 蒜蓉粉丝蒸扇贝',imgs:'🦞🐟🦪🦐'},
+      {name:'金悦轩海鲜酒家',em:'🍵',desc:'<strong>珠海排名第一的粤式早茶！</strong><br>大众点评常年霸榜，本地人也会排队的老字号。虾饺皮薄到透光，流沙包一口爆浆。<br><br>📍 拱北区域<br>🕐 早茶 8:00-14:00<br>💰 人均 ¥100-200<br>⚠️ 国庆可能排队1h+，建议10点前到',
+        dish:'🍽️ 必点：虾饺皇 · 流沙包 · 豉汁凤爪 · 鲜虾肠粉 · 金钱肚 · 杨枝甘露',imgs:'🥟🍵🍗🦐'},
+      {name:'扬名广场美食区',em:'🍽️',desc:'<strong>游玩日月贝后的完美晚餐地！</strong><br>扬名广场是情侣路沿线最大的综合商场，逛完日月贝步行10分钟就到。高中低档餐厅齐全，适合各年龄段口味。<br><br>📍 情侣路附近，近日月贝<br>🕐 10:00-22:00<br>💰 人均 ¥60-120',
+        dish:'🍽️ 推荐：八合里牛肉火锅 · 海底捞 · 太二酸菜鱼 · 各类粤菜餐厅',imgs:'🍲🥘🍜🥢'},
+      {name:'唐家古镇·非遗茶果',em:'🫘',desc:'<strong>珠海非物质文化遗产小吃！</strong><br>茶果是唐家湾传承百年的手工小吃，用糯米粉包裹花生、芝麻、椰丝等馅料，外裹蕉叶蒸制。叶仔糍咸甜适中，比海鲜更适合老人和小朋友的肠胃。<br><br>📍 唐家湾古镇山房路<br>🕐 9:00-18:00<br>💰 ¥5-15/个',
+        dish:'🍽️ 必尝：咸叶仔糍 · 甜叶仔糍 · 鸡仔饼 · 豆腐脑 · 钵仔糕',imgs:'🫘🍡🥮'},
+      {name:'21℃ Orange Sea',em:'🌅',desc:'<strong>珠海网红海景日落餐厅！</strong><br>位于金湾海边，橙色调的装修搭配无敌海景。日落时分整个餐厅被金色阳光浸染，自带滤镜。是你们计划书里提到的必打卡地。<br><br>📍 金湾区，机场附近<br>🕐 11:00-22:00<br>💰 人均 ¥80-150<br>📸 17:30-18:30 黄金拍照时段',
+        dish:'🍽️ 推荐：海鲜意面 · 香煎银鳕鱼 · 橙味莫吉托 · 提拉米苏',imgs:'🌅🍝🍹🍰'},
+      {name:'濠轩阁生蚝火锅',em:'🦪',desc:'<strong>珠海必吃！全城排名第一的生蚝火锅。</strong><br>横琴蚝是珠海的地理标志产品，肉质肥美鲜甜。这家店的生蚝火锅汤底用鸡骨架+药材慢熬，涮出来的生蚝嫩滑无比。<br><br>📍 拱北水湾路74号<br>🕐 11:00-凌晨2:00<br>💰 人均 ¥80-120',
+        dish:'🍽️ 必点：生蚝火锅 · 横琴蚝刺身 · 手打虾滑 · 炸腐竹',imgs:'🦪🍲🦐🔥'},
+      {name:'海底餐厅',em:'🐋',desc:'<strong>和鲸鲨共进午餐！</strong><br>位于海洋王国鲸鲨馆旁，巨大的亚克力幕墙就在餐桌旁。鲸鲨从你头顶缓缓游过，小朋友全程"哇"不停。<br><br>📍 长隆海洋王国内<br>🕐 11:00-19:00<br>💰 人均 ¥275<br>⭐ 体验＞味道，适合拍照打卡',
+        dish:'🍽️ 套餐含前菜+主菜+甜品 · 儿童套餐有海洋动物造型',imgs:'🐋🍽️📸'}
+    ];
+    const idx=parseInt(c.split('-')[1]),f=foods[idx];
+    return `<div class="imgph combo">${f.imgs.split('').map(e=>`<div class="iph-item"><span class="iph-emoji">${e}</span></div>`).join('')}</div>
+      <div style="font-size:14px;line-height:1.9;margin:12px 0">${f.desc}</div>
+      <div class="hlb"><div class="hlb-title">🍽️ 推荐点什么</div><div class="hlb-text">${f.dish}</div></div>`;
   }
-}
 
-function startAmbient(ctx) {
-  const now = ctx.currentTime;
-  // Gentle ocean-like ambient using filtered noise
-  const bufferSize = ctx.sampleRate * 4;
-  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) {
-    data[i] = (Math.random() * 2 - 1) * 0.08;
+  // === PLAY ===
+  if(c.startsWith('play-')){
+    if(c==='play-0')return `
+      <div class="st">🐋 长隆海洋王国 · Day 1-2 核心战场</div>
+      <div class="imgph combo">
+        <div class="iph-item"><span class="iph-emoji">🐋</span><span class="iph-text">鲸鲨馆</span></div>
+        <div class="iph-item"><span class="iph-emoji">🐧</span><span class="iph-text">企鹅馆</span></div>
+        <div class="iph-item"><span class="iph-emoji">🎢</span><span class="iph-text">过山车</span></div>
+        <div class="iph-item"><span class="iph-emoji">🎆</span><span class="iph-text">烟花秀</span></div>
+      </div>
+      <table class="itbl">
+        <tr><td>🕐 营业</td><td>10:00-20:30（住客8:30提前入园）</td></tr>
+        <tr><td>🎫 门票</td><td>成人¥450 · 儿童¥315 · ＜1m免票</td></tr>
+        <tr><td>⚡ 腕带</td><td>酒店住客鲸鲨特快8折 ¥310起</td></tr>
+        <tr><td>📱 必备</td><td>下载「长隆旅游APP」查看实时排队+演出表</td></tr>
+      </table>
+      <div class="st">🎯 一日精华路线（逆时针·不走回头路）</div>
+      <div class="route-step"><div class="route-num">1</div><div class="route-info"><h5>8:30 🐋 鲸鲨馆</h5><p>住客提前入园特权！此时空无一人，拍空镜大片。世界最大亚克力幕墙，8米长鲸鲨从头顶游过。</p></div></div>
+      <div class="route-step"><div class="route-num">2</div><div class="route-info"><h5>9:40 🎢 鹦鹉过山车</h5><p>需≥1.32m。大人项目，小朋友去旁边海牛馆。</p></div></div>
+      <div class="route-step"><div class="route-num">3</div><div class="route-info"><h5>11:00 🐋 白鲸剧场</h5><p>8头白鲸同台表演！提前20分钟占座。坐前排可能被选中互动。</p></div></div>
+      <div class="route-step"><div class="route-num">4</div><div class="route-info"><h5>12:00 🐬 海豚剧场</h5><p>海豚飞越顶球，小朋友全场欢呼。</p></div></div>
+      <div class="route-step"><div class="route-num">5</div><div class="route-info"><h5>13:00 🍽️ 午餐+午休</h5><p>海底餐厅（¥275/人）或回酒店午休。住企鹅酒店2分钟即到。</p></div></div>
+      <div class="route-step"><div class="route-num">6</div><div class="route-info"><h5>15:00 🎭 海洋大巡游</h5><p>世界最长花车巡游路线。主路沿线观看。</p></div></div>
+      <div class="route-step"><div class="route-num">7</div><div class="route-info"><h5>15:30 🐬 海豚剧场（二刷）</h5><p>或去英雄岛区域玩小朋友专属项目：转转车、旋转木马、企鹅过山车(1m+)。</p></div></div>
+      <div class="route-step"><div class="route-num">8</div><div class="route-info"><h5>19:15 ✨ 夜光巡游</h5><p>华丽花车+发光人偶。提前去横琴海边栏杆占烟花位。</p></div></div>
+      <div class="route-step"><div class="route-num">9</div><div class="route-info"><h5>20:00 🎆 海洋保卫战</h5><p>300架无人机+水上飞人+烟花。全程高能！靠近水池栏杆第一排视角最佳。</p></div></div>
+      <div class="hlb"><div class="hlb-title">💡 核心策略</div><div class="hlb-text">① 逆时针走（大部分游客顺时针，你反着走人少）<br>② 中午一定带娃回酒店午休（住景区酒店的最大意义）<br>③ 快速腕带国庆必买（热门项目免排队1h+）<br>④ 自备雨衣（园区¥50/件！水上项目会湿身）<br>⑤ 场馆冷气足，随身带薄外套</div></div>`;
+
+    const plays=[
+      {name:'长隆飞船乐园',em:'🚀',desc:'<strong>Day 3 上午 · 2025年全球最大室内乐园</strong><br><br>🕐 10:00开园 · 🎫 住飞船酒店免费无限次<br>不住店 ¥280-350/人<br><br><strong>必玩：</strong>虎鲸科普剧场 → 百慕大历险 → 深海探秘 → 宇宙出发<br><br>💡 室内不怕晒不怕雨，半天足够。中午退房后转场去别墅。',dish:'',imgs:'🚀🐋🎮🔬'},
+      {name:'爱情邮局+灯塔',em:'💌',desc:'<strong>Day 4 第一站 · 情侣路起点</strong><br><br>🎫 免费 · 🕐 全天<br><br>📸 纯白灯塔+蓝天大海，上午10:30光线最柔和。灯塔旁边就是爱情邮局，可以寄一张明信片。<br><br>🚶 由此向南步行，依次经过香炉湾沙滩、城市阳台、珠海渔女、日月贝——情侣路精华段一条线走完。',dish:'',imgs:'💌📸🏛️'},
+      {name:'香炉湾沙滩',em:'🏖️',desc:'<strong>Day 4 · 小朋友挖沙天堂</strong><br><br>🎫 免费 · 🕐 全天<br><br>👶 沙质细腻，坡度平缓，非常适合小朋友。带沙滩玩具（铲子+桶），可以玩一下午。<br>🪁 沙滩开阔，也可以放风筝。<br><br>🚶 位于爱情邮局和珠海渔女之间，步行即到。',dish:'',imgs:'🏖️👶🪁'},
+      {name:'景山公园·落日飞车',em:'🏔️',desc:'<strong>Day 4 · 必玩项目！</strong><br><br>🎫 缆车上山+滑道下山 ¥65-80/人<br>🕐 9:00-17:30 · 建议14:30-16:00<br><br>🚡 缆车缓缓上山，俯瞰整个珠海城市海岸线<br>🛷 滑道下山超级刺激，小朋友全程尖叫<br><br>💡 下午光线柔和，拍照最佳。提前在大众点评/美团买票免排队。',dish:'',imgs:'🏔️🚡🛷'},
+      {name:'珠海渔女',em:'🧜‍♀️',desc:'<strong>Day 4 · 珠海城市地标</strong><br><br>🎫 免费<br><br>珠海的城市象征，渔女手捧明珠伫立海中。必拍打卡点。<br><br>⚠️ 国庆人很多，拍完就走不要逗留。<br>🚶 香炉湾沙滩南端，步行2分钟。',dish:'',imgs:'🧜‍♀️📸'},
+      {name:'日月贝·野狸岛',em:'🐚',desc:'<strong>Day 4 · 日落绝美打卡点</strong><br><br>🎫 免费<br>🚴 环岛租家庭单车 ¥30/h<br>🌅 17:00-18:30 是黄金拍照时段<br><br>两个巨大的贝壳形建筑伫立在海中，夕阳下金光闪闪。海面倒影绝美。野狸岛环岛路骑行一圈约30分钟。<br><br>🍽️ 看完日落去旁边扬名广场吃晚餐。',dish:'',imgs:'🐚🌅🚴'},
+      {name:'珠海博物馆',em:'🏛️',desc:'<strong>Day 5 · 室内科普好去处</strong><br><br>🎫 免费 ⚠️ 需提前3天在公众号预约<br>🕐 9:00-17:00（周一闭馆，10.5是周一！注意查一下）<br><br>位于九洲城内，有互动科普展览，小朋友可以动手体验。室内冷气足，中午避暑好去处。<br><br>⚠️ 如果10.5恰好周一闭馆，改为去圆明新园（免费）或逛街。',dish:'',imgs:'🏛️📚🔬'},
+      {name:'唐家古镇',em:'🏘️',desc:'<strong>Day 3 & Day 5 · 悠闲漫步</strong><br><br>🎫 免费 · 🕐 全天<br><br>珠海最有文化底蕴的古镇。民国时期的洋楼建筑、石板路、文艺咖啡馆。山房路上有非遗小吃"茶果"。<br><br>🫘 叶仔糍咸甜适中，¥5-15/个<br>☕ 找一家院子咖啡馆坐一下午<br>🏛️ 唐绍仪故居、共乐园免费参观<br><br>🚶 从别墅步行可达，不用赶。',dish:'',imgs:'🏘️☕🫘'},
+      {name:'归墅度假别墅',em:'🏠',desc:'<strong>Day 3-4 大本营</strong><br><br>📍 唐家湾镇东岸村南堡路5号<br>🏡 250㎡独栋 · 4房2厅1厨3卫 · 30㎡庭院<br><br>🎤KTV · 🎱桌球 · 🀄麻将 · 🍖烧烤炉<br>🚗 唐家湾沙滩5分钟 · 情侣路10分钟<br><br>📞 携程搜「归墅度假别墅(珠海唐家湾店)」',dish:'',imgs:'🏠🎤🍖'},
+      {name:'Orange Sea日落餐厅',em:'🌅',desc:'<strong>Day 5 · 旅程完美收官</strong><br><br>📍 金湾机场附近<br>🕐 11:00-22:00 · 💰 ¥80-150/人<br><br>🌇 海边日落+晚餐，给整个旅程画上浪漫句号。<br>📸 17:30-18:30 橙色调阳光最美。<br><br>吃完了回机场酒店，第二天自然醒返程。',dish:'',imgs:'🌅🍝🍹'}
+    ];
+    const idx=parseInt(c.split('-')[1]),p=plays[idx];
+    if(idx>=2)return `<div class="imgph combo">${p.imgs.split('').map(e=>`<div class="iph-item"><span class="iph-emoji">${e}</span></div>`).join('')}</div><div style="font-size:14px;line-height:1.9;margin:12px 0">${p.desc}</div>`;
+    return `<div class="imgph combo">${p.imgs.split('').map(e=>`<div class="iph-item"><span class="iph-emoji">${e}</span></div>`).join('')}</div><div style="font-size:14px;line-height:1.9;margin:12px 0">${p.desc}</div>`;
   }
-  const noise = ctx.createBufferSource();
-  noise.buffer = buffer;
-  noise.loop = true;
-
-  const lpFilter = ctx.createBiquadFilter();
-  lpFilter.type = 'lowpass';
-  lpFilter.frequency.setValueAtTime(400, now);
-  lpFilter.Q.setValueAtTime(1, now);
-
-  const hpFilter = ctx.createBiquadFilter();
-  hpFilter.type = 'highpass';
-  hpFilter.frequency.setValueAtTime(80, now);
-
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.03, now);
-
-  noise.connect(lpFilter);
-  lpFilter.connect(hpFilter);
-  hpFilter.connect(gain);
-  gain.connect(ctx.destination);
-  noise.start();
-
-  // Add gentle bell-like tones
-  const notes = [262, 330, 392, 523];
-  notes.forEach((freq, i) => {
-    const osc = ctx.createOscillator();
-    const noteGain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, now);
-    noteGain.gain.setValueAtTime(0, now);
-    noteGain.gain.linearRampToValueAtTime(0.02, now + i * 3 + 1);
-    noteGain.gain.linearRampToValueAtTime(0, now + i * 3 + 6);
-    osc.connect(noteGain);
-    noteGain.connect(ctx.destination);
-    osc.start(now + i * 3);
-    osc.stop(now + i * 3 + 6);
-  });
-
-  // Loop the bell pattern
-  setInterval(() => {
-    if (!musicPlaying) return;
-    const t = ctx.currentTime;
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const g = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, t);
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.015, t + i * 3 + 1);
-      g.gain.linearRampToValueAtTime(0, t + i * 3 + 5);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(t + i * 3); osc.stop(t + i * 3 + 5);
-    });
-  }, 12000);
+  return '<p style="color:rgba(255,255,255,.4)">加载中...</p>';
 }
 
-// ===== PANEL MANAGEMENT =====
-function openPanel(type) {
-  closePanel();
-  const overlay = document.getElementById('panelOverlay');
-  const panel = document.getElementById('panel-' + type);
-  if (!panel) return;
-  overlay.classList.add('active');
-  panel.classList.add('active');
-  activePanel = type;
-  // Refresh maps
-  setTimeout(() => {
-    if (type === 'food' && foodMap) foodMap.invalidateSize();
-    if (type === 'play' && playMap) playMap.invalidateSize();
-  }, 400);
-}
-
-function closePanel() {
-  document.getElementById('panelOverlay').classList.remove('active');
-  if (activePanel) {
-    document.getElementById('panel-' + activePanel).classList.remove('active');
-    activePanel = null;
-  }
-}
-
-// ===== INIT MAPS =====
-function initMaps() {
-  // Food Map
-  foodMap = L.map('foodMap', { attributionControl: false }).setView([22.22, 113.55], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18
-  }).addTo(foodMap);
-
-  const foodSpots = [
-    { name: '帝企鹅自助餐厅', lat: 22.100, lng: 113.538, desc: '🐧 边看企鹅边吃饭<br>📍 企鹅酒店内<br>💰 晚餐 ¥258/成人', icon: '🐧' },
-    { name: '湾仔海鲜街', lat: 22.195, lng: 113.525, desc: '🦞 现捞现做海鲜一条街<br>📍 香洲区湾仔镇<br>💰 人均 ¥80-150', icon: '🦞' },
-    { name: '金悦轩海鲜酒家', lat: 22.230, lng: 113.555, desc: '🍵 珠海排名第一早茶<br>📍 拱北区域<br>💰 人均 ¥100-200', icon: '🍵' },
-    { name: '扬名广场美食区', lat: 22.275, lng: 113.575, desc: '🍽️ 综合美食商场<br>📍 情侣路沿线<br>💰 人均 ¥60-120', icon: '🍽️' },
-    { name: '唐家古镇·茶果', lat: 22.360, lng: 113.585, desc: '🫘 非遗小吃叶仔糍<br>📍 唐家湾古镇内<br>💰 ¥5-15/个', icon: '🫘' },
-    { name: '21℃ Orange Sea', lat: 22.020, lng: 113.390, desc: '🌅 网红海景日落餐厅<br>📍 金湾机场附近<br>💰 人均 ¥80-150', icon: '🌅' },
-    { name: '濠轩阁生蚝火锅', lat: 22.225, lng: 113.550, desc: '🦪 珠海必吃生蚝火锅<br>📍 拱北水湾路<br>💰 人均 ¥80-120', icon: '🦪' },
+// ===== MAPS =====
+function initFoodMap(){
+  foodMap=L.map('foodMap',{attributionControl:false,zoomControl:true}).setView([22.23,113.54],12);
+  L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',{subdomains:'1234',maxZoom:18}).addTo(foodMap);
+  const spots=[
+    {name:'帝企鹅自助餐厅',lat:22.100,lng:113.538,icon:'🐧',id:'food-0'},
+    {name:'湾仔海鲜街',lat:22.195,lng:113.525,icon:'🦞',id:'food-1'},
+    {name:'金悦轩海鲜酒家',lat:22.230,lng:113.555,icon:'🍵',id:'food-2'},
+    {name:'扬名广场',lat:22.275,lng:113.575,icon:'🍽️',id:'food-3'},
+    {name:'唐家古镇·茶果',lat:22.360,lng:113.585,icon:'🫘',id:'food-4'},
+    {name:'21℃ Orange Sea',lat:22.020,lng:113.390,icon:'🌅',id:'food-5'},
+    {name:'濠轩阁生蚝火锅',lat:22.225,lng:113.550,icon:'🦪',id:'food-6'},
+    {name:'海底餐厅',lat:22.100,lng:113.537,icon:'🐋',id:'food-7'},
   ];
-
-  foodSpots.forEach(s => {
-    const marker = L.marker([s.lat, s.lng], {
-      icon: L.divIcon({ html: `<div style="font-size:28px;">${s.icon}</div>`, className: '', iconSize: [36,36], iconAnchor: [18,18] })
-    }).addTo(foodMap);
-    marker.bindPopup(`<strong>${s.name}</strong><br>${s.desc}`);
-  });
-
-  // Play Map
-  playMap = L.map('playMap', { attributionControl: false }).setView([22.18, 113.54], 11);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18
-  }).addTo(playMap);
-
-  const playSpots = [
-    {
-      name: '🐋 长隆海洋王国', lat: 22.100, lng: 113.538,
-      desc: `<strong>Day1-2 核心战场！</strong><br>
-      🕐 10:00-20:30<br>
-      🎫 成人 ¥450 &nbsp;|&nbsp; 儿童 ¥315<br>
-      ⚡ 快速腕带 ¥310起 (酒店8折)<br>
-      <br><strong>🎯 必玩清单：</strong><br>
-      1️⃣ 鲸鲨馆 (世界最大)<br>
-      2️⃣ 白鲸剧场 (11:00/14:00/17:45)<br>
-      3️⃣ 海豚剧场 (12:00/15:30/17:00)<br>
-      4️⃣ 鹦鹉过山车 (≥1.32m)<br>
-      5️⃣ 冰山过山车 (≥1.2m)<br>
-      6️⃣ 5D城堡影院<br>
-      7️⃣ 20:00 海洋保卫战烟花秀<br>
-      <br><strong>💡 住客8:30提前入园！</strong><br>
-      逆时针走：鲸鲨馆→白鲸馆→北极熊馆`,
-      icon: '🐋', emoji: '🐋'
-    },
-    {
-      name: '🚀 长隆飞船乐园', lat: 22.095, lng: 113.530,
-      desc: `<strong>Day3 上午</strong><br>
-      🆕 2025年全球最大室内乐园<br>
-      🕐 10:00开园<br>
-      🎫 住飞船酒店免费无限次<br>
-      <br>✅ 虎鲸科普剧场<br>
-      ✅ 百慕大历险<br>
-      ✅ 深海探秘<br>
-      ✅ 不怕晒不怕雨！`,
-      icon: '🚀', emoji: '🚀'
-    },
-    {
-      name: '💌 爱情邮局', lat: 22.255, lng: 113.585,
-      desc: `<strong>Day4 第一站</strong><br>
-      📸 纯白灯塔超出片<br>
-      🕐 全天开放<br>
-      🎫 免费<br>
-      <br>情侣路必打卡地标`,
-      icon: '💌', emoji: '💌'
-    },
-    {
-      name: '🏖️ 香炉湾沙滩', lat: 22.260, lng: 113.582,
-      desc: `<strong>Day4 挖沙天堂</strong><br>
-      👶 小朋友最爱<br>
-      🎫 免费<br>
-      <br>带沙滩玩具！`,
-      icon: '🏖️', emoji: '🏖️'
-    },
-    {
-      name: '🏔️ 景山公园', lat: 22.252, lng: 113.578,
-      desc: `<strong>Day4 落日飞车</strong><br>
-      🚡 缆车上山 ¥65/人<br>
-      🛷 滑道下山超刺激<br>
-      <br>🕐 建议14:30-16:00<br>
-      俯瞰珠海全景`,
-      icon: '🏔️', emoji: '🏔️'
-    },
-    {
-      name: '🐚 日月贝·野狸岛', lat: 22.280, lng: 113.580,
-      desc: `<strong>Day4 日落打卡</strong><br>
-      🎫 免费<br>
-      🚴 环岛骑行 ¥30/h<br>
-      <br>🌅 17:00-18:30 最佳拍照时段<br>
-      贝壳建筑+海面倒影绝美`,
-      icon: '🐚', emoji: '🐚'
-    },
-    {
-      name: '🏛️ 珠海博物馆', lat: 22.258, lng: 113.576,
-      desc: `<strong>Day5 室内科普</strong><br>
-      🎫 免费<br>
-      ⚠️ 需提前3天公众号预约<br>
-      <br>九洲城内，互动展览`,
-      icon: '🏛️', emoji: '🏛️'
-    },
-    {
-      name: '🏘️ 唐家古镇', lat: 22.365, lng: 113.590,
-      desc: `<strong>Day5 悠闲漫步</strong><br>
-      🎫 免费<br>
-      🫘 非遗小吃·茶果<br>
-      <br>民国洋楼+咖啡馆<br>
-      文艺拍照好去处`,
-      icon: '🏘️', emoji: '🏘️'
-    },
-    {
-      name: '🏠 归墅度假别墅', lat: 22.370, lng: 113.595,
-      desc: `<strong>Day3-4 大本营</strong><br>
-      唐家湾镇东岸村<br>
-      250㎡ 4房独栋<br>
-      🎤KTV · 🎱桌球 · 🍖烧烤`,
-      icon: '🏠', emoji: '🏠'
-    },
-  ];
-
-  playSpots.forEach(s => {
-    const marker = L.marker([s.lat, s.lng], {
-      icon: L.divIcon({ html: `<div style="font-size:30px;">${s.icon}</div>`, className: '', iconSize: [40,40], iconAnchor: [20,20] })
-    }).addTo(playMap);
-    marker.bindPopup(s.desc, { maxWidth: 320 });
+  spots.forEach(s=>{
+    L.marker([s.lat,s.lng],{icon:L.divIcon({html:`<div style="font-size:30px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));cursor:pointer">${s.icon}</div>`,className:'',iconSize:[40,40],iconAnchor:[20,20]})}).addTo(foodMap)
+      .on('click',()=>openSidecard(s.id))
+      .bindPopup(`<strong>${s.name}</strong><br><small>👆 点击查看详细攻略</small>`);
   });
 }
 
-// ESC key to close
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closePanel();
-});
+function initPlayMap(){
+  playMap=L.map('playMap',{attributionControl:false,zoomControl:true}).setView([22.20,113.55],11);
+  L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',{subdomains:'1234',maxZoom:18}).addTo(playMap);
+  const spots=[
+    {name:'长隆海洋王国',lat:22.100,lng:113.538,icon:'🐋',id:'play-0'},
+    {name:'长隆飞船乐园',lat:22.095,lng:113.530,icon:'🚀',id:'play-1'},
+    {name:'爱情邮局+灯塔',lat:22.255,lng:113.585,icon:'💌',id:'play-2'},
+    {name:'香炉湾沙滩',lat:22.260,lng:113.582,icon:'🏖️',id:'play-3'},
+    {name:'景山公园',lat:22.252,lng:113.578,icon:'🏔️',id:'play-4'},
+    {name:'珠海渔女',lat:22.257,lng:113.583,icon:'🧜',id:'play-5'},
+    {name:'日月贝·野狸岛',lat:22.280,lng:113.580,icon:'🐚',id:'play-6'},
+    {name:'珠海博物馆',lat:22.258,lng:113.576,icon:'🏛️',id:'play-7'},
+    {name:'唐家古镇',lat:22.365,lng:113.590,icon:'🏘️',id:'play-8'},
+    {name:'归墅度假别墅',lat:22.370,lng:113.595,icon:'🏠',id:'play-9'},
+    {name:'Orange Sea',lat:22.020,lng:113.390,icon:'🌅',id:'play-10'},
+  ];
+  spots.forEach(s=>{
+    L.marker([s.lat,s.lng],{icon:L.divIcon({html:`<div style="font-size:30px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));cursor:pointer">${s.icon}</div>`,className:'',iconSize:[40,40],iconAnchor:[20,20]})}).addTo(playMap)
+      .on('click',()=>openSidecard(s.id))
+      .bindPopup(`<strong>${s.name}</strong><br><small>👆 点击查看详细攻略</small>`);
+  });
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
 </script>
 </body>
 </html>
