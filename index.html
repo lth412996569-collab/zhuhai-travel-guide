@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三朵金花旅行团 · 珠海国庆亲子悠游计划</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+:root {
+  --ocean-deep: #0a1628;
+  --ocean-mid: #1a3a5c;
+  --coral: #e8734a;
+  --coral-light: #f5a080;
+  --sand: #f5e6d3;
+  --gold: #d4a853;
+  --gold-light: #f0d78c;
+  --white: #fefefe;
+  --text: #2c3e50;
+  --text-light: #5a6c7d;
+  --shadow: 0 4px 24px rgba(0,0,0,.12);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,.18);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: .35s cubic-bezier(.4,0,.2,1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--ocean-deep);
+  color: var(--text);
+  overflow-x: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ===== LANDING PAGE ===== */
+#landing {
+  position: fixed; inset: 0; z-index: 1000;
+  background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 40%, #2c5f7c 70%, #0a1628 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transition: opacity .6s, transform .6s;
+}
+#landing.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
+
+.landing-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(232,115,74,.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 30%, rgba(212,168,83,.12) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 80%, rgba(245,160,128,.1) 0%, transparent 50%);
+}
+.landing-waves {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 30vh;
+  background: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,.02) 40px, rgba(255,255,255,.02) 41px);
+  mask-image: linear-gradient(to top, rgba(0,0,0,.3), transparent);
+}
+
+.landing-content { position: relative; z-index: 2; text-align: center; }
+.landing-badge {
+  display: inline-block; padding: 6px 20px; border-radius: 50px;
+  border: 1px solid rgba(212,168,83,.4);
+  color: var(--gold-light); font-size: 14px; letter-spacing: 4px;
+  margin-bottom: 24px;
+  animation: fadeInUp .8s ease both;
+}
+.landing-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(32px, 6vw, 64px); font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--coral-light) 50%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  animation: fadeInUp .8s .15s ease both;
+}
+.landing-subtitle {
+  font-size: clamp(14px, 2vw, 20px); color: rgba(255,255,255,.6);
+  letter-spacing: 2px; margin-bottom: 40px;
+  animation: fadeInUp .8s .3s ease both;
+}
+.landing-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 48px; border-radius: 50px;
+  border: 2px solid var(--coral);
+  background: rgba(232,115,74,.1);
+  color: var(--coral-light); font-size: 18px; font-weight: 600;
+  cursor: pointer; letter-spacing: 2px;
+  transition: all var(--transition);
+  animation: fadeInUp .8s .45s ease both;
+  backdrop-filter: blur(8px);
+}
+.landing-btn:hover {
+  background: var(--coral); color: white;
+  box-shadow: 0 0 40px rgba(232,115,74,.4);
+  transform: translateY(-2px);
+}
+
+.floating-flowers { position: absolute; inset: 0; pointer-events: none; }
+.flower {
+  position: absolute; font-size: 28px; opacity: 0;
+  animation: floatFlower 6s ease-in-out infinite;
+}
+.flower:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+.flower:nth-child(2) { top: 25%; right: 12%; animation-delay: 1s; font-size: 22px; }
+.flower:nth-child(3) { top: 60%; left: 15%; animation-delay: 2s; font-size: 32px; }
+.flower:nth-child(4) { top: 20%; right: 25%; animation-delay: .5s; }
+.flower:nth-child(5) { bottom: 20%; right: 18%; animation-delay: 1.5s; font-size: 24px; }
+.flower:nth-child(6) { bottom: 25%; left: 20%; animation-delay: 3s; }
+
+@keyframes floatFlower {
+  0%,100% { opacity: 0; transform: translateY(0) rotate(0deg); }
+  20% { opacity: .7; }
+  80% { opacity: .7; }
+  100% { opacity: 0; transform: translateY(-60px) rotate(15deg); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== MAIN APP ===== */
+#app { height: 100vh; width: 100vw; position: relative; }
+
+/* Music Toggle */
+.music-toggle {
+  position: fixed; top: 20px; right: 20px; z-index: 100;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,.1); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.2);
+  color: white; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.music-toggle:hover { background: rgba(255,255,255,.2); }
+.music-toggle.playing { border-color: var(--coral); box-shadow: 0 0 16px rgba(232,115,74,.3); }
+
+/* ===== NAVIGATION HUB ===== */
+#hub {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+}
+.hub-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(26,58,92,.3) 0%, var(--ocean-deep) 70%);
+}
+.hub-compass {
+  position: relative; width: min(80vw, 500px); height: min(80vw, 500px);
+  display: flex; align-items: center; justify-content: center;
+}
+.hub-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.08);
+  animation: ringPulse 4s ease-in-out infinite;
+}
+.hub-ring:nth-child(1) { width: 100%; height: 100%; animation-delay: 0s; }
+.hub-ring:nth-child(2) { width: 70%; height: 70%; animation-delay: .5s; }
+.hub-ring:nth-child(3) { width: 40%; height: 40%; animation-delay: 1s; }
+@keyframes ringPulse {
+  0%,100% { border-color: rgba(255,255,255,.06); }
+  50% { border-color: rgba(232,115,74,.15); }
+}
+
+.hub-center {
+  position: relative; z-index: 2; text-align: center;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,58,92,.9), rgba(10,22,40,.95));
+  border: 2px solid rgba(212,168,83,.5);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: 0 0 48px rgba(212,168,83,.15);
+}
+.hub-center .icon { font-size: 36px; }
+.hub-center .label {
+  font-family: 'Noto Serif SC', serif; font-size: 13px;
+  color: var(--gold-light); margin-top: 2px;
+}
+
+.nav-btn {
+  position: absolute; z-index: 3;
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,.15);
+  background: rgba(10,22,40,.85); backdrop-filter: blur(8px);
+  cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  transition: all var(--transition);
+  color: rgba(255,255,255,.7);
+  font-size: 28px;
+}
+.nav-btn .nav-label { font-size: 12px; font-weight: 500; letter-spacing: 1px; }
+.nav-btn:hover {
+  border-color: var(--coral); color: var(--coral-light);
+  box-shadow: 0 0 32px rgba(232,115,74,.25);
+  transform: scale(1.08);
+}
+
+.nav-btn.transport { top: -60px; left: 50%; transform: translateX(-50%); }
+.nav-btn.accommodation { right: -60px; top: 50%; transform: translateY(-50%); }
+.nav-btn.food { bottom: -60px; left: 50%; transform: translateX(-50%); }
+.nav-btn.play { left: -60px; top: 50%; transform: translateY(-50%); }
+
+/* ===== PANEL OVERLAY ===== */
+.panel-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(0,0,0,.5);
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s;
+}
+.panel-overlay.active { opacity: 1; pointer-events: all; }
+
+/* ===== DETAIL PANELS ===== */
+.detail-panel {
+  position: fixed; z-index: 60;
+  background: linear-gradient(180deg, #0d1f33 0%, #0a1628 100%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden; display: flex; flex-direction: column;
+  transition: all .5s cubic-bezier(.4,0,.2,1);
+  opacity: 0; pointer-events: none;
+  max-height: 85vh; max-width: 90vw;
+}
+.detail-panel.active { opacity: 1; pointer-events: all; }
+
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.panel-header h2 {
+  font-family: 'Noto Serif SC', serif; font-size: 20px;
+  color: var(--gold-light); display: flex; align-items: center; gap: 10px;
+}
+.panel-close {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.2); background: none;
+  color: rgba(255,255,255,.6); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.panel-close:hover { background: rgba(255,255,255,.1); color: white; }
+.panel-body {
+  flex: 1; overflow-y: auto; padding: 20px 24px;
+  color: rgba(255,255,255,.85); line-height: 1.7;
+}
+.panel-body::-webkit-scrollbar { width: 4px; }
+.panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+
+/* Panel sizes */
+.panel-center {
+  top: 50%; left: 50%; transform: translate(-50%,-50%) scale(.9);
+  width: min(800px, 92vw);
+}
+.panel-center.active { transform: translate(-50%,-50%) scale(1); }
+
+.panel-full {
+  top: 5vh; left: 5vw; right: 5vw; bottom: 5vh;
+  transform: scale(.95);
+}
+.panel-full.active { transform: scale(1); }
+
+/* ===== CARDS ===== */
+.card-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius-sm); overflow: hidden;
+  transition: all var(--transition); cursor: pointer;
+}
+.card:hover {
+  border-color: rgba(232,115,74,.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  transform: translateY(-2px);
+}
+.card-img {
+  height: 160px; display: flex; align-items: center; justify-content: center;
+  font-size: 48px; position: relative;
+}
+.card-img.hotel-penguin { background: linear-gradient(135deg, #1a3a5c 0%, #2c5f8c 100%); }
+.card-img.hotel-spaceship { background: linear-gradient(135deg, #1a1a3e 0%, #3a2a6e 100%); }
+.card-img.villa { background: linear-gradient(135deg, #2d5016 0%, #4a7a2e 100%); }
+.card-img.airport-hotel { background: linear-gradient(135deg, #4a3a1a 0%, #6a5a3a 100%); }
+.card-img .card-img-tag {
+  position: absolute; top: 10px; right: 10px;
+  padding: 4px 10px; border-radius: 20px;
+  background: var(--coral); color: white; font-size: 11px;
+}
+.card-body { padding: 14px; }
+.card-body h4 {
+  font-family: 'Noto Serif SC', serif; font-size: 16px;
+  color: white; margin-bottom: 6px;
+}
+.card-body .meta {
+  font-size: 12px; color: rgba(255,255,255,.5);
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.card-body .price {
+  font-size: 18px; font-weight: 700; color: var(--coral-light); margin-top: 8px;
+}
+.card-body .price small { font-size: 12px; font-weight: 400; color: rgba(255,255,255,.4); }
+
+/* ===== TRANSPORT TIMELINE ===== */
+.timeline { position: relative; padding-left: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 12px; top: 0; bottom: 0;
+  width: 2px; background: rgba(255,255,255,.1);
+}
+.timeline-item {
+  position: relative; padding: 12px 0;
+}
+.timeline-item::before {
+  content: ''; position: absolute; left: -24px; top: 18px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--coral); border: 2px solid var(--ocean-deep);
+}
+.timeline-item .t-date {
+  font-size: 12px; color: var(--gold); font-weight: 600; margin-bottom: 4px;
+}
+.timeline-item .t-content { font-size: 14px; }
+
+/* ===== FLIGHT CARDS ===== */
+.flight-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; }
+.flight-card {
+  flex: 1; min-width: 200px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius-sm); padding: 16px;
+}
+.flight-card .fc-city {
+  font-family: 'Noto Serif SC', serif; font-size: 18px; color: white;
+}
+.flight-card .fc-route {
+  font-size: 24px; color: var(--coral-light); margin: 8px 0;
+}
+.flight-card .fc-info { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.6; }
+
+/* ===== MAP CONTAINER ===== */
+.map-container {
+  width: 100%; height: 400px; border-radius: var(--radius-sm);
+  overflow: hidden; margin: 12px 0;
+}
+.leaflet-popup-content {
+  font-family: 'Noto Sans SC', sans-serif; font-size: 13px;
+  line-height: 1.6; color: #333;
+}
+.leaflet-popup-content strong { color: var(--coral); }
+
+/* ===== TAGS ===== */
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 500;
+}
+.tag-red { background: rgba(232,115,74,.2); color: var(--coral-light); }
+.tag-blue { background: rgba(52,152,219,.2); color: #85c1e9; }
+.tag-green { background: rgba(46,204,113,.2); color: #82e0aa; }
+
+/* ===== SECTION HEADERS ===== */
+.section-title {
+  font-family: 'Noto Serif SC', serif; font-size: 17px;
+  color: var(--gold-light); margin: 24px 0 12px;
+  padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.section-title:first-child { margin-top: 0; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .nav-btn { width: 76px; height: 76px; font-size: 24px; }
+  .nav-btn .nav-label { font-size: 10px; }
+  .nav-btn.transport { top: -46px; }
+  .nav-btn.accommodation { right: -46px; }
+  .nav-btn.food { bottom: -46px; }
+  .nav-btn.play { left: -46px; }
+  .hub-center { width: 90px; height: 90px; }
+  .hub-center .icon { font-size: 28px; }
+  .hub-center .label { font-size: 11px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .flight-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== LANDING PAGE ==================== -->
+<div id="landing">
+  <div class="landing-bg"></div>
+  <div class="landing-waves"></div>
+  <div class="floating-flowers">
+    <span class="flower">🌸</span><span class="flower">🌺</span><span class="flower">🌼</span>
+    <span class="flower">🌷</span><span class="flower">💮</span><span class="flower">🏵️</span>
+  </div>
+  <div class="landing-content">
+    <div class="landing-badge">ZHUHAI · 2026</div>
+    <h1 class="landing-title">三朵金花旅行团</h1>
+    <p class="landing-subtitle">珠海国庆亲子悠游 · 10.01 — 10.06</p>
+    <button class="landing-btn" onclick="enterApp()">
+      ✨ 开启旅程
+    </button>
+  </div>
+</div>
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="app" style="display:none;">
+
+  <!-- Music Toggle -->
+  <button class="music-toggle" id="musicBtn" onclick="toggleMusic()" title="背景音乐">
+    🎵
+  </button>
+
+  <!-- Navigation Hub -->
+  <div id="hub">
+    <div class="hub-bg"></div>
+    <div class="hub-compass">
+      <div class="hub-ring"></div>
+      <div class="hub-ring"></div>
+      <div class="hub-ring"></div>
+
+      <div class="hub-center">
+        <span class="icon">🧭</span>
+        <span class="label">导航中枢</span>
+      </div>
+
+      <button class="nav-btn transport" onclick="openPanel('transport')">
+        ✈️<span class="nav-label">交通</span>
+      </button>
+      <button class="nav-btn accommodation" onclick="openPanel('accommodation')">
+        🏨<span class="nav-label">住宿</span>
+      </button>
+      <button class="nav-btn food" onclick="openPanel('food')">
+        🍜<span class="nav-label">饮食</span>
+      </button>
+      <button class="nav-btn play" onclick="openPanel('play')">
+        🎢<span class="nav-label">游玩</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel Overlay -->
+  <div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+
+  <!-- ===== TRANSPORT PANEL ===== -->
+  <div class="detail-panel panel-center" id="panel-transport">
+    <div class="panel-header">
+      <h2>✈️ 出行交通</h2>
+      <button class="panel-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="panel-body">
+      <div class="section-title">🎯 最佳订票窗口</div>
+      <div class="tag tag-red" style="margin-right:6px;">8月15日～8月25日</div>
+      <span style="font-size:13px;color:rgba(255,255,255,.5);">每周二/三 14:00-16:00 价格最低</span>
+
+      <div class="section-title">🛫 成都出发</div>
+      <div class="flight-row">
+        <div class="flight-card">
+          <div class="fc-city">成都 → 珠海</div>
+          <div class="fc-route">CTU ✈ ZUH</div>
+          <div class="fc-info">
+            方案A：直飞金湾机场<br>
+            🕐 约2.5h &nbsp;|&nbsp; 💰 ¥1,200～1,800<br>
+            国航/川航/东航执飞<br><br>
+            <strong>🔥 推荐方案B：</strong>飞广州白云<br>
+            → 地铁广州南 → 广珠城际(1h ¥70)<br>
+            💰 比直飞便宜约30%
+          </div>
+        </div>
+        <div class="flight-card">
+          <div class="fc-city">成都 → 广州 → 珠海</div>
+          <div class="fc-route">CTU ✈ CAN 🚄 ZUH</div>
+          <div class="fc-info">
+            飞广州白云机场<br>
+            → 地铁3号线到广州南站(约1h)<br>
+            → 广珠城际到珠海站(约1h ¥70)<br>
+            🕐 总计约4.5h<br>
+            💰 机票 ¥1,000 + 高铁 ¥70<br><br>
+            <strong>⚠️ 高铁票9月16日早8点开抢！</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">🛫 杭州出发</div>
+      <div class="flight-row">
+        <div class="flight-card">
+          <div class="fc-city">杭州 → 珠海</div>
+          <div class="fc-route">HGH ✈ ZUH</div>
+          <div class="fc-info">
+            直飞金湾机场<br>
+            🕐 约2h &nbsp;|&nbsp; 💰 ¥800～1,200<br>
+            多航司执飞，国庆涨幅温和<br><br>
+            <strong>💡 10月2日出发比10月1日便宜约30%</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">🚕 珠海市内交通</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="t-date">机场 → 长隆</div>
+          <div class="t-content">滴滴6座商务车，约50min，¥150～200</div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-date">长隆 → 市区别墅</div>
+          <div class="t-content">滴滴商务车，约40min，¥100～150</div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-date">市区景点间</div>
+          <div class="t-content">滴滴 ¥30～80/程 &nbsp;|&nbsp; 情侣路推荐骑行</div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-date">🚫 不建议租车</div>
+          <div class="t-content">国庆情侣路日均10万辆车，20分钟堵成1小时+<br>6人打商务车刚好，人均极便宜</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ACCOMMODATION PANEL ===== -->
+  <div class="detail-panel panel-center" id="panel-accommodation">
+    <div class="panel-header">
+      <h2>🏨 住宿安排</h2>
+      <button class="panel-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="panel-body">
+      <div class="section-title">🎯 最佳预订窗口</div>
+      <div class="tag tag-red">8月10日～8月20日 长隆酒店</div>
+      <div class="tag tag-red" style="margin-left:4px;">8月25日～9月5日 别墅</div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-img hotel-penguin">
+            🐧<span class="card-img-tag">10.1入住</span>
+          </div>
+          <div class="card-body">
+            <h4>长隆企鹅酒店</h4>
+            <div class="meta">
+              <span>⭐ 亲子天花板</span><span>🕐 2分钟到园区</span>
+            </div>
+            <div class="price">¥2,800～3,200 <small>/间/晚</small></div>
+            <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">
+              ✅ 住客提前1h入园 &nbsp;|&nbsp; ✅ 专属通道<br>
+              ✅ 帝企鹅餐厅看真企鹅 &nbsp;|&nbsp; ✅ 亲子配套最全<br>
+              预订：长隆旅游APP &nbsp;|&nbsp; 客服：400-883-0083
+            </p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img hotel-spaceship">
+            🚀<span class="card-img-tag">10.2入住</span>
+          </div>
+          <div class="card-body">
+            <h4>长隆飞船酒店</h4>
+            <div class="meta">
+              <span>🆕 2025年新开</span><span>🏊 无边泳池</span>
+            </div>
+            <div class="price">¥2,800～3,400 <small>/间/晚</small></div>
+            <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">
+              ✅ 室内直通飞船乐园 &nbsp;|&nbsp; ✅ 无限次免费入园<br>
+              ✅ 全区智能新科技 &nbsp;|&nbsp; ✅ 顶楼无边泳池
+            </p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img villa">
+            🏡<span class="card-img-tag">10.3-4入住</span>
+          </div>
+          <div class="card-body">
+            <h4>归墅度假别墅 · 唐家湾</h4>
+            <div class="meta">
+              <span>250㎡</span><span>4房2厅</span><span>🎤KTV</span>
+            </div>
+            <div class="price">¥2,500～3,500 <small>/栋/晚</small></div>
+            <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">
+              ✅ 整栋独享 &nbsp;|&nbsp; ✅ 厨房+烧烤炉<br>
+              ✅ 桌球+麻将 &nbsp;|&nbsp; ✅ 庭院看星星<br>
+              携程搜「归墅度假别墅(珠海唐家湾店)」<br>
+              唐家湾镇东岸村南堡路5号
+            </p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img airport-hotel">
+            🏢<span class="card-img-tag">10.5入住</span>
+          </div>
+          <div class="card-body">
+            <h4>金湾机场附近酒店</h4>
+            <div class="meta">
+              <span>🚶 步行到机场</span><span>次日返程</span>
+            </div>
+            <div class="price">¥400～600 <small>/间/晚</small></div>
+            <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">
+              携程/飞猪 9月10日～15日预订<br>
+              多家可选，库存充足
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOD PANEL (MAP) ===== -->
+  <div class="detail-panel panel-full" id="panel-food">
+    <div class="panel-header">
+      <h2>🍜 美食地图</h2>
+      <button class="panel-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="panel-body" style="padding:0; display:flex; flex-direction:column;">
+      <div id="foodMap" class="map-container" style="flex:1; min-height:300px; height:100%;"></div>
+      <div style="padding:12px 24px; display:flex; flex-wrap:wrap; gap:8px; font-size:12px; color:rgba(255,255,255,.5);">
+        <span>🦪 横琴蚝 · 珠海招牌</span>
+        <span>|</span><span>🦞 湾仔海鲜街</span>
+        <span>|</span><span>🐧 帝企鹅自助餐厅</span>
+        <span>|</span><span>🍵 金悦轩</span>
+        <span>|</span><span>🦀 斗门重壳蟹</span>
+        <span>|</span><span>🍜 唐家古镇·茶果</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PLAY PANEL (MAP) ===== -->
+  <div class="detail-panel panel-full" id="panel-play">
+    <div class="panel-header">
+      <h2>🎢 游玩地图</h2>
+      <button class="panel-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="panel-body" style="padding:0; display:flex; flex-direction:column;">
+      <div id="playMap" class="map-container" style="flex:1; min-height:300px; height:100%;"></div>
+      <div style="padding:12px 24px; display:flex; flex-wrap:wrap; gap:8px; font-size:12px; color:rgba(255,255,255,.5);">
+        <span>🐋 长隆海洋王国 · 2日</span><span>|</span>
+        <span>🚀 飞船乐园 · 半天</span><span>|</span>
+        <span>💌 爱情邮局</span><span>|</span>
+        <span>🏖️ 香炉湾沙滩</span><span>|</span>
+        <span>🏔️ 景山公园</span><span>|</span>
+        <span>🐚 日月贝</span><span>|</span>
+        <span>🎭 珠海博物馆</span><span>|</span>
+        <span>🏘️ 唐家古镇</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ===== STATE =====
+let activePanel = null;
+let foodMap = null, playMap = null;
+let audioCtx = null, musicPlaying = false;
+
+// ===== ENTER APP =====
+function enterApp() {
+  document.getElementById('landing').classList.add('hidden');
+  const app = document.getElementById('app');
+  app.style.display = 'block';
+  app.style.animation = 'fadeInUp .6s ease both';
+  initMaps();
+}
+document.getElementById('app').addEventListener('animationend', function(e) {
+  if (e.animationName === 'fadeInUp') foodMap && foodMap.invalidateSize();
+});
+
+// ===== MUSIC =====
+function toggleMusic() {
+  const btn = document.getElementById('musicBtn');
+  if (!musicPlaying) {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    startAmbient(audioCtx);
+    musicPlaying = true;
+    btn.classList.add('playing');
+    btn.textContent = '🔊';
+  } else {
+    if (audioCtx) { audioCtx.close(); audioCtx = null; }
+    musicPlaying = false;
+    btn.classList.remove('playing');
+    btn.textContent = '🎵';
+  }
+}
+
+function startAmbient(ctx) {
+  const now = ctx.currentTime;
+  // Gentle ocean-like ambient using filtered noise
+  const bufferSize = ctx.sampleRate * 4;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * 0.08;
+  }
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+  noise.loop = true;
+
+  const lpFilter = ctx.createBiquadFilter();
+  lpFilter.type = 'lowpass';
+  lpFilter.frequency.setValueAtTime(400, now);
+  lpFilter.Q.setValueAtTime(1, now);
+
+  const hpFilter = ctx.createBiquadFilter();
+  hpFilter.type = 'highpass';
+  hpFilter.frequency.setValueAtTime(80, now);
+
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.03, now);
+
+  noise.connect(lpFilter);
+  lpFilter.connect(hpFilter);
+  hpFilter.connect(gain);
+  gain.connect(ctx.destination);
+  noise.start();
+
+  // Add gentle bell-like tones
+  const notes = [262, 330, 392, 523];
+  notes.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    const noteGain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, now);
+    noteGain.gain.setValueAtTime(0, now);
+    noteGain.gain.linearRampToValueAtTime(0.02, now + i * 3 + 1);
+    noteGain.gain.linearRampToValueAtTime(0, now + i * 3 + 6);
+    osc.connect(noteGain);
+    noteGain.connect(ctx.destination);
+    osc.start(now + i * 3);
+    osc.stop(now + i * 3 + 6);
+  });
+
+  // Loop the bell pattern
+  setInterval(() => {
+    if (!musicPlaying) return;
+    const t = ctx.currentTime;
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.015, t + i * 3 + 1);
+      g.gain.linearRampToValueAtTime(0, t + i * 3 + 5);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(t + i * 3); osc.stop(t + i * 3 + 5);
+    });
+  }, 12000);
+}
+
+// ===== PANEL MANAGEMENT =====
+function openPanel(type) {
+  closePanel();
+  const overlay = document.getElementById('panelOverlay');
+  const panel = document.getElementById('panel-' + type);
+  if (!panel) return;
+  overlay.classList.add('active');
+  panel.classList.add('active');
+  activePanel = type;
+  // Refresh maps
+  setTimeout(() => {
+    if (type === 'food' && foodMap) foodMap.invalidateSize();
+    if (type === 'play' && playMap) playMap.invalidateSize();
+  }, 400);
+}
+
+function closePanel() {
+  document.getElementById('panelOverlay').classList.remove('active');
+  if (activePanel) {
+    document.getElementById('panel-' + activePanel).classList.remove('active');
+    activePanel = null;
+  }
+}
+
+// ===== INIT MAPS =====
+function initMaps() {
+  // Food Map
+  foodMap = L.map('foodMap', { attributionControl: false }).setView([22.22, 113.55], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18
+  }).addTo(foodMap);
+
+  const foodSpots = [
+    { name: '帝企鹅自助餐厅', lat: 22.100, lng: 113.538, desc: '🐧 边看企鹅边吃饭<br>📍 企鹅酒店内<br>💰 晚餐 ¥258/成人', icon: '🐧' },
+    { name: '湾仔海鲜街', lat: 22.195, lng: 113.525, desc: '🦞 现捞现做海鲜一条街<br>📍 香洲区湾仔镇<br>💰 人均 ¥80-150', icon: '🦞' },
+    { name: '金悦轩海鲜酒家', lat: 22.230, lng: 113.555, desc: '🍵 珠海排名第一早茶<br>📍 拱北区域<br>💰 人均 ¥100-200', icon: '🍵' },
+    { name: '扬名广场美食区', lat: 22.275, lng: 113.575, desc: '🍽️ 综合美食商场<br>📍 情侣路沿线<br>💰 人均 ¥60-120', icon: '🍽️' },
+    { name: '唐家古镇·茶果', lat: 22.360, lng: 113.585, desc: '🫘 非遗小吃叶仔糍<br>📍 唐家湾古镇内<br>💰 ¥5-15/个', icon: '🫘' },
+    { name: '21℃ Orange Sea', lat: 22.020, lng: 113.390, desc: '🌅 网红海景日落餐厅<br>📍 金湾机场附近<br>💰 人均 ¥80-150', icon: '🌅' },
+    { name: '濠轩阁生蚝火锅', lat: 22.225, lng: 113.550, desc: '🦪 珠海必吃生蚝火锅<br>📍 拱北水湾路<br>💰 人均 ¥80-120', icon: '🦪' },
+  ];
+
+  foodSpots.forEach(s => {
+    const marker = L.marker([s.lat, s.lng], {
+      icon: L.divIcon({ html: `<div style="font-size:28px;">${s.icon}</div>`, className: '', iconSize: [36,36], iconAnchor: [18,18] })
+    }).addTo(foodMap);
+    marker.bindPopup(`<strong>${s.name}</strong><br>${s.desc}`);
+  });
+
+  // Play Map
+  playMap = L.map('playMap', { attributionControl: false }).setView([22.18, 113.54], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18
+  }).addTo(playMap);
+
+  const playSpots = [
+    {
+      name: '🐋 长隆海洋王国', lat: 22.100, lng: 113.538,
+      desc: `<strong>Day1-2 核心战场！</strong><br>
+      🕐 10:00-20:30<br>
+      🎫 成人 ¥450 &nbsp;|&nbsp; 儿童 ¥315<br>
+      ⚡ 快速腕带 ¥310起 (酒店8折)<br>
+      <br><strong>🎯 必玩清单：</strong><br>
+      1️⃣ 鲸鲨馆 (世界最大)<br>
+      2️⃣ 白鲸剧场 (11:00/14:00/17:45)<br>
+      3️⃣ 海豚剧场 (12:00/15:30/17:00)<br>
+      4️⃣ 鹦鹉过山车 (≥1.32m)<br>
+      5️⃣ 冰山过山车 (≥1.2m)<br>
+      6️⃣ 5D城堡影院<br>
+      7️⃣ 20:00 海洋保卫战烟花秀<br>
+      <br><strong>💡 住客8:30提前入园！</strong><br>
+      逆时针走：鲸鲨馆→白鲸馆→北极熊馆`,
+      icon: '🐋', emoji: '🐋'
+    },
+    {
+      name: '🚀 长隆飞船乐园', lat: 22.095, lng: 113.530,
+      desc: `<strong>Day3 上午</strong><br>
+      🆕 2025年全球最大室内乐园<br>
+      🕐 10:00开园<br>
+      🎫 住飞船酒店免费无限次<br>
+      <br>✅ 虎鲸科普剧场<br>
+      ✅ 百慕大历险<br>
+      ✅ 深海探秘<br>
+      ✅ 不怕晒不怕雨！`,
+      icon: '🚀', emoji: '🚀'
+    },
+    {
+      name: '💌 爱情邮局', lat: 22.255, lng: 113.585,
+      desc: `<strong>Day4 第一站</strong><br>
+      📸 纯白灯塔超出片<br>
+      🕐 全天开放<br>
+      🎫 免费<br>
+      <br>情侣路必打卡地标`,
+      icon: '💌', emoji: '💌'
+    },
+    {
+      name: '🏖️ 香炉湾沙滩', lat: 22.260, lng: 113.582,
+      desc: `<strong>Day4 挖沙天堂</strong><br>
+      👶 小朋友最爱<br>
+      🎫 免费<br>
+      <br>带沙滩玩具！`,
+      icon: '🏖️', emoji: '🏖️'
+    },
+    {
+      name: '🏔️ 景山公园', lat: 22.252, lng: 113.578,
+      desc: `<strong>Day4 落日飞车</strong><br>
+      🚡 缆车上山 ¥65/人<br>
+      🛷 滑道下山超刺激<br>
+      <br>🕐 建议14:30-16:00<br>
+      俯瞰珠海全景`,
+      icon: '🏔️', emoji: '🏔️'
+    },
+    {
+      name: '🐚 日月贝·野狸岛', lat: 22.280, lng: 113.580,
+      desc: `<strong>Day4 日落打卡</strong><br>
+      🎫 免费<br>
+      🚴 环岛骑行 ¥30/h<br>
+      <br>🌅 17:00-18:30 最佳拍照时段<br>
+      贝壳建筑+海面倒影绝美`,
+      icon: '🐚', emoji: '🐚'
+    },
+    {
+      name: '🏛️ 珠海博物馆', lat: 22.258, lng: 113.576,
+      desc: `<strong>Day5 室内科普</strong><br>
+      🎫 免费<br>
+      ⚠️ 需提前3天公众号预约<br>
+      <br>九洲城内，互动展览`,
+      icon: '🏛️', emoji: '🏛️'
+    },
+    {
+      name: '🏘️ 唐家古镇', lat: 22.365, lng: 113.590,
+      desc: `<strong>Day5 悠闲漫步</strong><br>
+      🎫 免费<br>
+      🫘 非遗小吃·茶果<br>
+      <br>民国洋楼+咖啡馆<br>
+      文艺拍照好去处`,
+      icon: '🏘️', emoji: '🏘️'
+    },
+    {
+      name: '🏠 归墅度假别墅', lat: 22.370, lng: 113.595,
+      desc: `<strong>Day3-4 大本营</strong><br>
+      唐家湾镇东岸村<br>
+      250㎡ 4房独栋<br>
+      🎤KTV · 🎱桌球 · 🍖烧烤`,
+      icon: '🏠', emoji: '🏠'
+    },
+  ];
+
+  playSpots.forEach(s => {
+    const marker = L.marker([s.lat, s.lng], {
+      icon: L.divIcon({ html: `<div style="font-size:30px;">${s.icon}</div>`, className: '', iconSize: [40,40], iconAnchor: [20,20] })
+    }).addTo(playMap);
+    marker.bindPopup(s.desc, { maxWidth: 320 });
+  });
+}
+
+// ESC key to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePanel();
+});
+</script>
+</body>
+</html>
